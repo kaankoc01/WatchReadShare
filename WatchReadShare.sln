@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchReadShare.API", "WatchReadShare\WatchReadShare.API.csproj", "{9F64B1B5-BB22-4D40-BE79-CD42615AF370}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{DD41D86C-778E-45AE-823E-1D6F7C6F8A56}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{CC54EA5E-1092-43A3-B9FF-890863A5F7FB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{13F00011-0A46-450E-85FA-3A2264942A8A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{91B1297F-06D1-4F54-849D-AB30DC39BC3B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{2A222D0D-05CE-4BB7-87AD-860AA088B67E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchReadShare.Application", "WatchReadShare.Application\WatchReadShare.Application.csproj", "{9E4B6E92-0192-4CF5-A2CF-7995C19D30EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchReadShare.Domain", "WatchReadShare.Domain\WatchReadShare.Domain.csproj", "{13952249-5537-44C7-92F5-989C1089445E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchReadShare.Persistence", "WatchReadShare.Persistence\WatchReadShare.Persistence.csproj", "{AF5606F6-81DB-4B96-9F13-BC9B04B23ED4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9F64B1B5-BB22-4D40-BE79-CD42615AF370}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F64B1B5-BB22-4D40-BE79-CD42615AF370}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F64B1B5-BB22-4D40-BE79-CD42615AF370}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F64B1B5-BB22-4D40-BE79-CD42615AF370}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E4B6E92-0192-4CF5-A2CF-7995C19D30EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E4B6E92-0192-4CF5-A2CF-7995C19D30EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E4B6E92-0192-4CF5-A2CF-7995C19D30EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E4B6E92-0192-4CF5-A2CF-7995C19D30EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13952249-5537-44C7-92F5-989C1089445E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13952249-5537-44C7-92F5-989C1089445E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13952249-5537-44C7-92F5-989C1089445E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13952249-5537-44C7-92F5-989C1089445E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF5606F6-81DB-4B96-9F13-BC9B04B23ED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF5606F6-81DB-4B96-9F13-BC9B04B23ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF5606F6-81DB-4B96-9F13-BC9B04B23ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF5606F6-81DB-4B96-9F13-BC9B04B23ED4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9F64B1B5-BB22-4D40-BE79-CD42615AF370} = {13F00011-0A46-450E-85FA-3A2264942A8A}
+		{13F00011-0A46-450E-85FA-3A2264942A8A} = {DD41D86C-778E-45AE-823E-1D6F7C6F8A56}
+		{91B1297F-06D1-4F54-849D-AB30DC39BC3B} = {DD41D86C-778E-45AE-823E-1D6F7C6F8A56}
+		{2A222D0D-05CE-4BB7-87AD-860AA088B67E} = {DD41D86C-778E-45AE-823E-1D6F7C6F8A56}
+		{9E4B6E92-0192-4CF5-A2CF-7995C19D30EC} = {91B1297F-06D1-4F54-849D-AB30DC39BC3B}
+		{13952249-5537-44C7-92F5-989C1089445E} = {91B1297F-06D1-4F54-849D-AB30DC39BC3B}
+		{AF5606F6-81DB-4B96-9F13-BC9B04B23ED4} = {2A222D0D-05CE-4BB7-87AD-860AA088B67E}
+	EndGlobalSection
+EndGlobal
