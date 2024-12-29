@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WatchReadShare.Domain\WatchReadShare.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

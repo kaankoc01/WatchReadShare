@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WatchReadShare.Application\WatchReadShare.Application.csproj" />
     <ProjectReference Include="..\WatchReadShare.Domain\WatchReadShare.Domain.csproj" />
   </ItemGroup>
 
