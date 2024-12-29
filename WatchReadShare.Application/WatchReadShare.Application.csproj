@@ -10,4 +10,16 @@
     <ProjectReference Include="..\WatchReadShare.Domain\WatchReadShare.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Movies\" />
+    <Folder Include="Features\Genres\" />
+    <Folder Include="Features\Comments\" />
+    <Folder Include="Features\Serials\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+  </ItemGroup>
+
 </Project>

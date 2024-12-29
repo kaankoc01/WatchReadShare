@@ -5,7 +5,7 @@ using WatchReadShare.Domain.Entities;
 
 namespace WatchReadShare.Persistence
 {
-    public class Context(DbContextOptions<Context> options) : IdentityDbContext<AppUser,AppRole,int>(options)
+    public class Context(DbContextOptions<Context> options) : IdentityDbContext<AppUser, AppRole, int>(options)
     {
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Serial> Serials { get; set; }
