@@ -6,8 +6,8 @@ namespace WatchReadShare.Application.Features.Categories
 {
     public interface ICategoryService
     {
-        Task<CategoryWithMovieDto?> GetCategoryWithMovieAsync(int id);
-        Task<List<CategoryWithMovieDto?>> GetCategoryWithMovieAsync();
+        Task<ServiceResult<CategoryWithMovieDto>> GetCategoryWithMovieAsync(int id);
+        Task<ServiceResult<List<CategoryWithMovieDto>>> GetCategoryWithMovieAsync();
 
         Task<ServiceResult<List<CategoryDto>>> GetAllListAsync();
         Task<ServiceResult<CategoryDto>> GetByIdAsync(int id);

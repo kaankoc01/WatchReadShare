@@ -1,46 +1,92 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using WatchReadShare.Application.Contracts.Persistence;
 using WatchReadShare.Application.Features.Categories.Create;
 using WatchReadShare.Application.Features.Categories.Dto;
 using WatchReadShare.Application.Features.Categories.Update;
+using WatchReadShare.Domain.Entities;
 
 namespace WatchReadShare.Application.Features.Categories
 {
     public class CategoryService(ICategoryRepository categoryRepository , IUnitOfWork unitOfWork , IMapper mapper) : ICategoryService
     {
-        public Task<CategoryWithMovieDto?> GetCategoryWithMovieAsync(int id)
+        public async Task<ServiceResult<CategoryWithMovieDto>> GetCategoryWithMovieAsync(int id)
         {
-            throw new NotImplementedException();
+            var category = await categoryRepository.GetCategoryWithMovieAsync(id);
+            if (category is null)
+            {
+                return ServiceResult<CategoryWithMovieDto>.Fail("Kategori Bulunamadı.", HttpStatusCode.NotFound);
+            }
+            var categoryDto = mapper.Map<CategoryWithMovieDto>(category);
+            return ServiceResult<CategoryWithMovieDto>.Success(categoryDto);
         }
 
-        public Task<List<CategoryWithMovieDto?>> GetCategoryWithMovieAsync()
+        public async Task<ServiceResult<List<CategoryWithMovieDto>>> GetCategoryWithMovieAsync()
         {
-            throw new NotImplementedException();
+            var category = await categoryRepository.GetCategoryWithMovieAsync();
+
+            var categoryDto = mapper.Map<List<CategoryWithMovieDto>>(category);
+            return ServiceResult<List<CategoryWithMovieDto>>.Success(categoryDto);
         }
 
-        public Task<ServiceResult<List<CategoryDto>>> GetAllListAsync()
+        public async Task<ServiceResult<List<CategoryDto>>> GetAllListAsync()
         {
-            throw new NotImplementedException();
+            var categories = await categoryRepository.GetAllAsync();
+            var categoryDto = mapper.Map<List<CategoryDto>>(categories);
+            return ServiceResult<List<CategoryDto>>.Success(categoryDto);
         }
 
-        public Task<ServiceResult<CategoryDto>> GetByIdAsync(int id)
+        public async Task<ServiceResult<CategoryDto>> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var category = await categoryRepository.GetByIdAsync(id);
+            if (category is null)
+            {
+                return ServiceResult<CategoryDto>.Fail("Kategori Bulunamadı.", HttpStatusCode.NotFound);
+            }
+            var categoryDto = mapper.Map<CategoryDto>(category);
+            return ServiceResult<CategoryDto>.Success(categoryDto);
         }
 
-        public Task<ServiceResult<int>> CreateAsync(CreateCategoryRequest request)
+        public async Task<ServiceResult<int>> CreateAsync(CreateCategoryRequest request)
         {
-            throw new NotImplementedException();
+            var anyCategory = await categoryRepository.AnyAsync(x => x.Name == request.Name);
+
+            if (anyCategory)
+            {
+                return ServiceResult<int>.Fail("Kategori ismi veri tabanında bulunmaktadır..", HttpStatusCode.BadRequest);
+            }
+            var newCategory = mapper.Map<Category>(request);
+            await categoryRepository.AddAsync(newCategory);
+            await unitOfWork.SaveChangesAsync();
+            return ServiceResult<int>.Success(newCategory.Id);
         }
 
-        public Task<ServiceResult> UpdateAsync(UpdateCategoryRequest request)
+        public async Task<ServiceResult> UpdateAsync(UpdateCategoryRequest request)
         {
-            throw new NotImplementedException();
+            var isCategoryNameExist = await categoryRepository.AnyAsync(x => x.Name == request.Name && x.Id != request.Id);
+            if (isCategoryNameExist)
+            {
+                return ServiceResult.Fail("Kategori ismi veri tabanında bulunmaktadır..", HttpStatusCode.BadRequest);
+            }
+
+            var category = mapper.Map<Category>(request);
+            category.Id = request.Id;
+            categoryRepository.Update(category);
+            await unitOfWork.SaveChangesAsync();
+            return ServiceResult.Success(HttpStatusCode.NoContent);
+
         }
 
-        public Task<ServiceResult> DeleteAsync(int id)
+        public async Task<ServiceResult> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var category = await categoryRepository.GetByIdAsync(id);
+            if (category is null)
+            {
+                return ServiceResult.Fail("Kategori Bulunamadı.", HttpStatusCode.NotFound);
+            }
+            categoryRepository.Delete(category);
+            await unitOfWork.SaveChangesAsync();
+            return ServiceResult.Success(HttpStatusCode.NoContent);
         }
     }
 }
