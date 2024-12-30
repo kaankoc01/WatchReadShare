@@ -7,7 +7,7 @@ namespace WatchReadShare.Application.Contracts.Persistence
         Task<bool> AnyAsync(TId id);
 
         Task<List<T>> GetAllAsync();
-
+        
         Task<List<T>> GetAllPagedAsync(int pageNumber, int pageSize);
 
         IQueryable<T> Where(Expression<Func<T, bool>> predicate);

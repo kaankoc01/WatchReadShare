@@ -2,7 +2,6 @@
 using WatchReadShare.Application.Features.Categories;
 using WatchReadShare.Application.Features.Categories.Create;
 using WatchReadShare.Application.Features.Categories.Update;
-using WatchReadShare.Domain.Entities;
 
 namespace WatchReadShare.API.Controllers
 {

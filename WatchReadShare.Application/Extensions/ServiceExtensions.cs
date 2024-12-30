@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WatchReadShare.Application.Features.Categories;
+using WatchReadShare.Application.Features.Movies;
 
 namespace WatchReadShare.Application.Extensions
 {
@@ -15,6 +16,7 @@ namespace WatchReadShare.Application.Extensions
             services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
             //services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IMovieService, MovieService>();
 
           
             services.AddFluentValidationAutoValidation();

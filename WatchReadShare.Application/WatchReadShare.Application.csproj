@@ -11,8 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Movies\" />
-    <Folder Include="Features\Genres\" />
     <Folder Include="Features\Comments\" />
     <Folder Include="Features\Serials\" />
   </ItemGroup>
