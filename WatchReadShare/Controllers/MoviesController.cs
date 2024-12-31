@@ -12,7 +12,7 @@ namespace WatchReadShare.API.Controllers
         public async Task<IActionResult> GetById(int id) => CreateActionResult(await movieService.GetByIdAsync(id));
         [HttpGet]
         public async Task<IActionResult> GetAll() => CreateActionResult(await movieService.GetAllListAsync());
-        [HttpGet("page/{pageNumber}/{pageSize}")]
+        [HttpGet("{pageNumber}/{pageSize}")]
         public async Task<IActionResult> GetPagedAll(int pageNumber, int pageSize) => CreateActionResult(await movieService.GetPagedAllList(pageNumber, pageSize));
         [HttpPost]
         public async Task<IActionResult> Create(CreateMovieRequest request) => CreateActionResult(await movieService.CreateAsync(request));

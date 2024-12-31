@@ -15,7 +15,8 @@ namespace WatchReadShare.Domain.Entities
             public int? SerialId { get; set; } // Dizi Id'si
             public Serial Serial { get; set; }
 
-            public string UserId { get; set; } // Yorum yapan kullanıcı
+            public int UserId { get; set; } // Yorum yapan kullanıcı
+            public AppUser AppUser { get; set; }
 
             public DateTime? Updated { get; set; } // Güncellenme tarihi
     }

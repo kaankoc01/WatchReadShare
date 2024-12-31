@@ -11,7 +11,7 @@ namespace WatchReadShare.API.Controllers
         public async Task<IActionResult> GetById(int id) => CreateActionResult(await genreService.GetByIdAsync(id));
         [HttpGet]
         public async Task<IActionResult> GetAll() => CreateActionResult(await genreService.GetAllListAsync());
-        [HttpGet("{pageNumber:int}/ {pageSize:int}")]
+        [HttpGet("{pageNumber}/{pageSize}")]
         public async Task<IActionResult> GetPage(int pageNumber, int pageSize) => CreateActionResult(await genreService.GetPagedAllList(pageNumber, pageSize));
         [HttpPost]
         public async Task<IActionResult> Create(CreateGenreRequest request) => CreateActionResult(await genreService.CreateAsync(request));
