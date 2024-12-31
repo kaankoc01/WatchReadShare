@@ -1,4 +1,4 @@
 ﻿namespace WatchReadShare.Application.Features.Genres.Update;
 
-public class UpdateGenreRequest(int Id, string Name);
+public record UpdateGenreRequest(int Id, string Name);
  

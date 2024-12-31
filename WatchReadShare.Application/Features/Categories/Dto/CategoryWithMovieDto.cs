@@ -1,4 +1,6 @@
-﻿namespace WatchReadShare.Application.Features.Categories.Dto;
+﻿using WatchReadShare.Application.Features.Movies.Dto;
 
-public record CategoryWithMovieDto(int Id, string Name); //  List<ProductDto> Products eklenecek.
+namespace WatchReadShare.Application.Features.Categories.Dto;
+
+public record CategoryWithMovieDto(int Id, string Name , List<MovieDto> Movies); 
  

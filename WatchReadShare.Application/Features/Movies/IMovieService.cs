@@ -9,7 +9,7 @@ namespace WatchReadShare.Application.Features.Movies
         Task<ServiceResult<MovieDto?>> GetByIdAsync(int id);
         Task<ServiceResult<List<MovieDto>>> GetAllListAsync();
         Task<ServiceResult<List<MovieDto>>> GetPagedAllList(int pageNumber, int pageSize);
-        Task<ServiceResult<CreateMovieResponse>> CreateAsync(CreateMovieRequest Request);
+        Task<ServiceResult<CreateMovieResponse>> CreateAsync(CreateMovieRequest request);
         Task<ServiceResult> UpdateAsync(UpdateMovieRequest request);
         Task<ServiceResult> DeleteAsync(int id);
     }
