@@ -9,5 +9,8 @@ namespace WatchReadShare.Persistence.Categories
         public Task<Category?> GetCategoryWithMovieAsync(int id) => context.Categories.Include(x => x.Movies).FirstOrDefaultAsync(x => x.Id == id);
 
         public Task<List<Category?>> GetCategoryWithMovieAsync() => context.Categories.Include(x => x.Movies).ToListAsync();
+
+        public Task<Category?> GetCategoryByNameAsync(string name) => context.Categories.FirstOrDefaultAsync(x => x.Name == name);
+
     }
 }

@@ -13,7 +13,7 @@ using WatchReadShare.Domain.Entities;
 
 namespace WatchReadShare.Application.Features.Serials
 {
-    public class SerialService(ISerialRepository serialRepository, IUnitOfWork unitOfWork, IMapper mapper) : ISerialService
+    public class SerialService(ISerialRepository serialRepository, IUnitOfWork unitOfWork, IMapper mapper, ICategoryRepository categoryRepository) : ISerialService
     {
         public async Task<ServiceResult<SerialDto?>> GetByIdAsync(int id)
         {
@@ -42,12 +42,19 @@ namespace WatchReadShare.Application.Features.Serials
 
         public async Task<ServiceResult<CreateSerialResponse>> CreateAsync(CreateSerialRequest request)
         {
+            var serialCategory = await categoryRepository.GetCategoryByNameAsync("Dizi");
+            if (serialCategory is null)
+            {
+                throw new Exception("Dizi kategorisi bulunamadı.");
+            }
+
             var anySerial = await serialRepository.AnyAsync(x => x.Name == request.Name);
             if (anySerial)
             {
                 return ServiceResult<CreateSerialResponse>.Fail("Bu isimde bir dizi zaten var.");
             }
             var serial = mapper.Map<Serial>(request);
+            serial.CategoryId = serialCategory.Id;
             await serialRepository.AddAsync(serial);
             await unitOfWork.SaveChangesAsync();
             return ServiceResult<CreateSerialResponse>.SuccessAsCreated(new CreateSerialResponse(serial.Id), $"api/serial/{serial.Id}");

@@ -23,7 +23,7 @@ namespace WatchReadShare.Application.Extensions
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ISerialService, SerialService>();
 
-          
+
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 

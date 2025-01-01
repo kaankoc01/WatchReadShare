@@ -8,7 +8,7 @@ using WatchReadShare.Domain.Entities;
 
 namespace WatchReadShare.Application.Features.Movies
 {
-    public class MovieService(IMovieRepository movieRepository , IUnitOfWork unitOfWork, IMapper mapper) : IMovieService
+    public class MovieService(IMovieRepository movieRepository , IUnitOfWork unitOfWork, IMapper mapper,ICategoryRepository categoryRepository) : IMovieService
     {
         public async Task<ServiceResult<MovieDto?>> GetByIdAsync(int id)
         {
@@ -44,12 +44,21 @@ namespace WatchReadShare.Application.Features.Movies
 
         public async Task<ServiceResult<CreateMovieResponse>> CreateAsync(CreateMovieRequest request)
         {
-            var anyProduct = await movieRepository.AnyAsync(x => x.Name == request.Name);
-            if (anyProduct)
+            var movieCategory = await categoryRepository.GetCategoryByNameAsync("Film");
+            if (movieCategory is null)
+            {
+                throw new Exception("Film kategorisi bulunamadı.");
+            }
+
+            
+
+            var anyMovie = await movieRepository.AnyAsync(x => x.Name == request.Name);
+            if (anyMovie)
             {
                 return ServiceResult<CreateMovieResponse>.Fail("Bu isimde bir film zaten var.", HttpStatusCode.BadRequest);
             }
             var movie = mapper.Map<Movie>(request);
+            movie.CategoryId = movieCategory.Id;
             await movieRepository.AddAsync(movie);
             await unitOfWork.SaveChangesAsync();
             return ServiceResult<CreateMovieResponse>.SuccessAsCreated(new CreateMovieResponse(movie.Id), $"api/movie/{movie.Id}");

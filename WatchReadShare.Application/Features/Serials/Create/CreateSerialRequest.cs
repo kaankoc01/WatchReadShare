@@ -1,3 +1,3 @@
 ﻿namespace WatchReadShare.Application.Features.Serials.Create;
 
-public record CreateSerialRequest(string Name, string Description, int CategoryId, int GenreId);
+public record CreateSerialRequest(string Name, string Description, int GenreId);

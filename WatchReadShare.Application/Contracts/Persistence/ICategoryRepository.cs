@@ -6,5 +6,7 @@ namespace WatchReadShare.Application.Contracts.Persistence
     {
         Task<Category?> GetCategoryWithMovieAsync(int id);
         Task<List<Category?>> GetCategoryWithMovieAsync();
+        Task<Category?> GetCategoryByNameAsync(string name);
+
     }
 }
