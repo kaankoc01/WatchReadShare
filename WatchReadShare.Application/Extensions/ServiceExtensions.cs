@@ -4,6 +4,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WatchReadShare.Application.Features.Auth;
 using WatchReadShare.Application.Features.Categories;
 using WatchReadShare.Application.Features.Comments;
 using WatchReadShare.Application.Features.Genres;
@@ -22,6 +23,9 @@ namespace WatchReadShare.Application.Extensions
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ISerialService, SerialService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAuthService, AuthService>();
+
 
 
             services.AddFluentValidationAutoValidation();

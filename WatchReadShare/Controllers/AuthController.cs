@@ -9,18 +9,26 @@ namespace WatchReadShare.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
-            var token = await authService.RegisterAsync(registerDto);
-            if (string.IsNullOrEmpty(token)) return BadRequest("Kayıt işlemi başarısız!");
+            var result = await authService.RegisterAsync(registerDto);
+            if (result == null)
+            {
+                return BadRequest("Kullanıcı kaydı başarısız.");
+            }
 
-            return Ok(new { Token = token });
+            return Ok(new { Token = result });
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            var token = await authService.LoginAsync(loginDto);
-            if (string.IsNullOrEmpty(token)) return Unauthorized("Geçersiz kullanıcı adı veya şifre!");
+            var tokenResponse = await authService.LoginAsync(loginDto);
+            return Ok(tokenResponse);
+        }
 
-            return Ok(new { Token = token });
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
+        {
+            var tokenResponse = await authService.RefreshTokenAsync(refreshToken);
+            return Ok(tokenResponse);
         }
     }
 }

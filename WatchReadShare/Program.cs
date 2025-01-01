@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
 using System.Text;
 using WatchReadShare.Application.Extensions;
 using WatchReadShare.Application.Features.Auth;
@@ -29,6 +30,8 @@ builder.Services.AddIdentity<AppUser, AppRole>()
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -46,6 +49,8 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
+ServicePointManager.ServerCertificateValidationCallback =
+    (sender, certificate, chain, sslPolicyErrors) => true;
 
 
 
