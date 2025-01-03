@@ -66,6 +66,9 @@ namespace WatchReadShare.Application.Features.Movies
 
         public async Task<ServiceResult> UpdateAsync(UpdateMovieRequest request)
         {
+
+           
+
             var isMovieNameExist = await movieRepository.AnyAsync(x => x.Name == request.Name && x.Id != request.Id);
             if (isMovieNameExist)
             {

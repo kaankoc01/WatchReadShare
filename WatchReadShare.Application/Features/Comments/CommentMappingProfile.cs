@@ -11,6 +11,7 @@ namespace WatchReadShare.Application.Features.Comments
         public CommentMappingProfile()
         {
             CreateMap<Comment, CommentDto>().ReverseMap();
+            CreateMap<Comment, CreateCommentResponse>().ReverseMap();
             CreateMap<CreateCommentRequest, Comment>()
                 .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content.ToLowerInvariant()));
             CreateMap<UpdateCommentRequest, Comment>()

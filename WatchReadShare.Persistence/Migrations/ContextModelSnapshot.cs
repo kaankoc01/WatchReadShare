@@ -269,9 +269,6 @@ namespace WatchReadShare.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -294,11 +291,11 @@ namespace WatchReadShare.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
-
                     b.HasIndex("MovieId");
 
                     b.HasIndex("SerialId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Comments");
                 });
@@ -458,12 +455,6 @@ namespace WatchReadShare.Persistence.Migrations
 
             modelBuilder.Entity("WatchReadShare.Domain.Entities.Comment", b =>
                 {
-                    b.HasOne("WatchReadShare.Domain.Entities.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WatchReadShare.Domain.Entities.Movie", "Movie")
                         .WithMany()
                         .HasForeignKey("MovieId");
@@ -471,6 +462,12 @@ namespace WatchReadShare.Persistence.Migrations
                     b.HasOne("WatchReadShare.Domain.Entities.Serial", "Serial")
                         .WithMany()
                         .HasForeignKey("SerialId");
+
+                    b.HasOne("WatchReadShare.Domain.Entities.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("AppUser");
 

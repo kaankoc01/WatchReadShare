@@ -1,6 +1,14 @@
 ﻿namespace WatchReadShare.Application.Features.Comments.Dto
 {
-    public record CommentDto(int Id, string Content, string Username, string AssociatedEntity)
+    public class CommentDto()
     {
+        public int Id { get; set; }
+        public string Content { get; set; }
+        public int UserId { get; set; }
+        public int? SerialId { get; set; }
+        public int? MovieId { get; set; }
+        public int? PostId { get; set; }
+
     }
+    
 }

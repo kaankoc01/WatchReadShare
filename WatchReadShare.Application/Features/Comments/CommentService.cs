@@ -58,7 +58,7 @@ namespace WatchReadShare.Application.Features.Comments
             }
             var comment = mapper.Map<Comment>(request);
             comment.Id = request.Id;
-             commentRepository.Update(comment);
+            commentRepository.Update(comment);
             await unitOfWork.SaveChangesAsync();
             return ServiceResult.Success(HttpStatusCode.NoContent);
         }

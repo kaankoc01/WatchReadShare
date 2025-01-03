@@ -10,8 +10,6 @@ namespace WatchReadShare.API.Controllers
     public class CommentsController(ICommentService commentService): CustomBaseController
     {
 
-
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id) => CreateActionResult(await commentService.GetByIdAsync(id));
         [HttpGet]

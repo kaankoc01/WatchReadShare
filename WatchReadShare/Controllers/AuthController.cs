@@ -24,11 +24,5 @@ namespace WatchReadShare.API.Controllers
             return Ok(tokenResponse);
         }
 
-        [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
-        {
-            var tokenResponse = await authService.RefreshTokenAsync(refreshToken);
-            return Ok(tokenResponse);
-        }
     }
 }

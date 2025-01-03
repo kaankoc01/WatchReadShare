@@ -62,8 +62,8 @@ namespace WatchReadShare.Application.Features.Serials
 
         public async Task<ServiceResult> UpdateAsync(UpdateSerialRequest request)
         {
-            var IsSerialNameExist = await serialRepository.AnyAsync(x => x.Name == request.Name && x.Id != request.Id);
-            if (IsSerialNameExist)
+            var isSerialNameExist = await serialRepository.AnyAsync(x => x.Name == request.Name && x.Id != request.Id);
+            if (isSerialNameExist)
             {
                 return ServiceResult.Fail("Bu isimde bir dizi zaten var.");
             }

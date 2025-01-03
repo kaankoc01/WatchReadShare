@@ -26,7 +26,9 @@ namespace WatchReadShare.Application
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(configuration["Jwt:ExpireMinutes"])),
+                Expires = DateTime.Now.AddMinutes(30),
+                NotBefore = DateTime.Now,
+                IssuedAt = DateTime.Now,
                 SigningCredentials = creds,
                 Issuer = configuration["Jwt:Issuer"],
                 Audience = configuration["Jwt:Audience"]

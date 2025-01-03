@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WatchReadShare.Application.Features.Categories;
 using WatchReadShare.Application.Features.Categories.Create;
 using WatchReadShare.Application.Features.Categories.Update;
 
 namespace WatchReadShare.API.Controllers
 {
-
+    [Authorize(Roles = "Admin")]
     public class CategoriesController(ICategoryService categoryService) : CustomBaseController
     {
         [HttpGet]
@@ -16,6 +17,7 @@ namespace WatchReadShare.API.Controllers
 
         [HttpGet("movies")]
         public async Task<IActionResult> GetCategoryWithMovie() => CreateActionResult(await categoryService.GetCategoryWithMovieAsync());
+
         [HttpGet("{id:int}/movies")]
         public async Task<IActionResult> GetCategoryWithMovie(int id) => CreateActionResult(await categoryService.GetCategoryWithMovieAsync(id));
 
