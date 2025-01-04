@@ -6,4 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WatchReadShare.Application\WatchReadShare.Application.csproj" />
+    <ProjectReference Include="..\WatchReadShare.Domain\WatchReadShare.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
