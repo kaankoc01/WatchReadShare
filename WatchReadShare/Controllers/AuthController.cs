@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WatchReadShare.Application.Features.Auth;
 
@@ -22,6 +22,60 @@ namespace WatchReadShare.API.Controllers
         {
             var tokenResponse = await authService.LoginAsync(loginDto);
             return Ok(tokenResponse);
+        }
+
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            var user = await authService.GetUserByEmailAsync(email);
+            if (user == null)
+                return BadRequest("Kullanıcı bulunamadı!");
+
+            var result = await authService.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+                return BadRequest("Doğrulama başarısız.");
+
+            return Ok("Email başarıyla doğrulandı!");
+        }
+
+        // Yeniden Email Doğrulama Gönderimi
+        [HttpPost("resend-confirmation-email")]
+        public async Task<IActionResult> ResendConfirmationEmail([FromBody] ResendEmailDto resendEmailDto)
+        {
+            var user = await authService.GetUserByEmailAsync(resendEmailDto.Email);
+            if (user == null)
+                return NotFound(new { Message = "Kullanıcı bulunamadı." });
+
+            var result = await authService.ResendConfirmationEmailAsync(user);
+            if (result)
+                return Ok(new { Message = "Doğrulama emaili başarıyla gönderildi." });
+
+            return BadRequest(new { Message = "Email zaten doğrulanmış." });
+        }
+
+
+        [HttpGet("verify-email")]
+        public async Task<IActionResult> VerifyEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return BadRequest("Geçersiz parametreler.");
+            }
+
+            var user = await authService.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("Kullanıcı bulunamadı.");
+            }
+
+            var result = await authService.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return Ok("Email doğrulama başarılı!");
+            }
+
+            return BadRequest("Email doğrulama başarısız.");
         }
 
     }

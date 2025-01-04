@@ -1,20 +1,21 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 using WatchReadShare.Domain.Entities;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
-using Microsoft.AspNetCore.Identity.Data;
 
 namespace WatchReadShare.Application.Features.Auth
 {
-    public class AuthService(UserManager<AppUser> userManager , SignInManager<AppUser> signInManager, IConfiguration configuration,ITokenService tokenService) : IAuthService
+    public class AuthService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration configuration, ITokenService tokenService, IMailService mailService) : IAuthService
     {
-        public async Task<string?> RegisterAsync(RegisterDto registerDto)
+        public async Task<RegisterResultDto> RegisterAsync(RegisterDto registerDto)
         {
+
+
             var user = new AppUser
             {
                 UserName = registerDto.UserName,
@@ -26,7 +27,44 @@ namespace WatchReadShare.Application.Features.Auth
             var result = await userManager.CreateAsync(user, registerDto.Password);
             if (result.Succeeded)
             {
-                return GenerateToken(user);
+
+                // Email doğrulama token'ı oluştur
+                var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                //// Doğrulama linki oluştur
+                //var confirmationLink = $"{configuration["FrontendUrl"]}/auth/confirm-email?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(user.Email)}";
+
+                // E-posta içeriği hazırlanıyor
+                string subject = "Hesap Doğrulama";
+                string message = $"Hesabınızı doğrulamak için aşağıdaki bağlantıyı kullanın:\n\n" +
+                                 $"Token: {token}\n\n" +
+                                 $"Veya aşağıdaki bağlantıya tıklayın:\n" +
+                                 $"https://localhost:/verify?userId={user.Id}&token={Uri.EscapeDataString(token)}";
+
+                // Mail gönderimi
+                await mailService.SendEmailAsync(user.Email, subject, message);
+
+                return new RegisterResultDto
+                {
+                    Success = true,
+                    Message = "Kullanıcı başarıyla oluşturuldu. Lütfen e-postanızı kontrol edin."
+                };
+
+
+
+
+
+
+                //// Doğrulama mailini gönder
+                //var mailService = new MailService(configuration);
+                //await mailService.SendEmailAsync(
+                //    user.Email,
+                //    "Email Doğrulama",
+                //    $"Lütfen emailinizi doğrulamak için <a href='{confirmationLink}'>buraya tıklayın</a>.");
+
+                //return "Kullanıcı başarıyla kaydedildi . Lütfen emailinizi doğrulayın."; 
+
+                // return GenerateToken(user);
             }
 
             return null; // Register başarısızsa null dön.
@@ -39,6 +77,9 @@ namespace WatchReadShare.Application.Features.Auth
             {
                 throw new Exception("Email veya şifre hatalı.");
             }
+
+            if (!await userManager.IsEmailConfirmedAsync(user))
+                throw new Exception("Email doğrulanmamış. Lütfen email adresinizi doğrulayın.");
 
             var signInResult = await signInManager.PasswordSignInAsync(user, loginDto.Password, false, false);
             if (!signInResult.Succeeded)
@@ -111,6 +152,44 @@ namespace WatchReadShare.Application.Features.Auth
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+
+        public async Task<AppUser?> GetUserByEmailAsync(string email)
+        {
+            return await userManager.FindByEmailAsync(email);
+        }
+        public async Task<AppUser?> GetUserByIdAsync(string Id)
+        {
+            return await userManager.FindByIdAsync(Id);
+        }
+
+        public async Task<IdentityResult> ConfirmEmailAsync(AppUser user, string token)
+        {
+            return await userManager.ConfirmEmailAsync(user, token);
+        }
+
+        public async Task<bool> ResendConfirmationEmailAsync(AppUser user)
+        {
+            if (await userManager.IsEmailConfirmedAsync(user))
+            {
+                return false; // Zaten doğrulanmışsa email gönderilmez.
+            }
+
+            // Email doğrulama token'ı oluştur
+            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            // Doğrulama linki oluştur
+            var confirmationLink = $"{configuration["FrontendUrl"]}/auth/confirm-email?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(user.Email)}";
+
+            // Doğrulama maili gönder
+            await mailService.SendEmailAsync(
+                user.Email,
+                "Yeniden Email Doğrulama",
+                $"Lütfen emailinizi doğrulamak için <a href='{confirmationLink}'>buraya tıklayın</a>."
+            );
+
+            return true; // Başarıyla email gönderildi.
         }
 
     }

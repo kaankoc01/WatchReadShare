@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchReadShare.API", "WatchReadShare\WatchReadShare.API.csproj", "{9F64B1B5-BB22-4D40-BE79-CD42615AF370}"
 EndProject
@@ -20,6 +20,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchReadShare.Domain", "WatchReadShare.Domain\WatchReadShare.Domain.csproj", "{13952249-5537-44C7-92F5-989C1089445E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchReadShare.Persistence", "WatchReadShare.Persistence\WatchReadShare.Persistence.csproj", "{AF5606F6-81DB-4B96-9F13-BC9B04B23ED4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FrontEnd", "FrontEnd", "{424DEAA2-968B-4A9A-81A8-CEF3BCEB1031}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchReadShare.FrontEnd", "WatchReadShare.FrontEnd\WatchReadShare.FrontEnd.csproj", "{B4BADC3C-CFE6-43C1-8BE0-BDF69FFC4EA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +47,10 @@ Global
 		{AF5606F6-81DB-4B96-9F13-BC9B04B23ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF5606F6-81DB-4B96-9F13-BC9B04B23ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF5606F6-81DB-4B96-9F13-BC9B04B23ED4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4BADC3C-CFE6-43C1-8BE0-BDF69FFC4EA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4BADC3C-CFE6-43C1-8BE0-BDF69FFC4EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4BADC3C-CFE6-43C1-8BE0-BDF69FFC4EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4BADC3C-CFE6-43C1-8BE0-BDF69FFC4EA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,5 +63,6 @@ Global
 		{9E4B6E92-0192-4CF5-A2CF-7995C19D30EC} = {91B1297F-06D1-4F54-849D-AB30DC39BC3B}
 		{13952249-5537-44C7-92F5-989C1089445E} = {91B1297F-06D1-4F54-849D-AB30DC39BC3B}
 		{AF5606F6-81DB-4B96-9F13-BC9B04B23ED4} = {2A222D0D-05CE-4BB7-87AD-860AA088B67E}
+		{B4BADC3C-CFE6-43C1-8BE0-BDF69FFC4EA4} = {424DEAA2-968B-4A9A-81A8-CEF3BCEB1031}
 	EndGlobalSection
 EndGlobal
