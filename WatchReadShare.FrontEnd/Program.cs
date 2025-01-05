@@ -1,7 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using System;
+using WatchReadShare.Domain.Entities;
+using WatchReadShare.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+// Veritabaný baðlantýsýný yapýlandýr
+builder.Services.AddDbContext<Context>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
+builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<Context>();
 
 
 var app = builder.Build();
@@ -23,6 +32,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Register}/{action=Index}/{id?}");
 
 app.Run();

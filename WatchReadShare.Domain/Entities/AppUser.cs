@@ -6,6 +6,7 @@ namespace WatchReadShare.Domain.Entities
     {
         public string Name { get; set; }
         public string Surname { get; set; }
+        public int? ConfirmCode { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiration { get; set; }
     }
