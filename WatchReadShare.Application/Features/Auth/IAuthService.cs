@@ -12,5 +12,6 @@ namespace WatchReadShare.Application.Features.Auth
         Task<AppUser?> GetUserByEmailAsync(string email);
         public Task<bool> ResendConfirmationEmailAsync(AppUser user);
         public Task<AppUser?> GetUserByIdAsync(string Id);
+        public Task<bool> ConfirmEmailAsync(ConfirmEmailDto confirmEmailDto);
     }
 }

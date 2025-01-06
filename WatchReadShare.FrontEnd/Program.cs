@@ -1,7 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using System;
+using Microsoft.AspNetCore.Identity;
 using WatchReadShare.Domain.Entities;
 using WatchReadShare.Persistence;
+using WatchReadShare.Application;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Net;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +16,14 @@ builder.Services.AddControllersWithViews();
 // Veritabaný baðlantýsýný yapýlandýr
 builder.Services.AddDbContext<Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
-builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<Context>();
+builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<Context>().AddDefaultTokenProviders();
 
+
+
+
+
+
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 

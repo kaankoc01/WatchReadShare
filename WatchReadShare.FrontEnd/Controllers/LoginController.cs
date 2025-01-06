@@ -20,8 +20,9 @@ namespace WatchReadShare.FrontEnd.Controllers
             if (result.Succeeded)
             {
                 var user = await userManager.FindByEmailAsync(loginDto.Email);
-                if (user.EmailConfirmed)
+                if (user.EmailConfirmed == true)
                 {
+
                     return RedirectToAction("Index", "MyProfile");
                 }
                 // else lütfen mail adresinizi doğrulayın.  

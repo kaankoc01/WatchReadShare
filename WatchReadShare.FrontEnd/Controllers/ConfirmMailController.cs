@@ -19,7 +19,7 @@ namespace WatchReadShare.FrontEnd.Controllers
         public async Task<IActionResult> Index(ConfirmMailViewModel confirmMailViewModel)
         {
             var user = await userManager.FindByEmailAsync(confirmMailViewModel.Mail);
-            if (user.ConfirmCode == confirmMailViewModel.ConfirmCode)
+            if (user.ConfirmCode == confirmMailViewModel.ConfirmCode) 
             {
                 user.EmailConfirmed = true;
                 await userManager.UpdateAsync(user);

@@ -24,6 +24,19 @@ namespace WatchReadShare.API.Controllers
             return Ok(tokenResponse);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmailDto confirmEmailDto)
+        {
+            var result = await authService.ConfirmEmailAsync(confirmEmailDto);
+            if (result == null)
+            {
+                return BadRequest("Email Doğrulanmamış.");
+            }
+
+            return Ok("Email başarıyla Doğrulandı");
+        }
+    
+
 
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string token, string email)
@@ -39,8 +52,8 @@ namespace WatchReadShare.API.Controllers
             return Ok("Email başarıyla doğrulandı!");
         }
 
-        // Yeniden Email Doğrulama Gönderimi
-        [HttpPost("resend-confirmation-email")]
+        
+       [HttpPost("resend-confirmation-email")]
         public async Task<IActionResult> ResendConfirmationEmail([FromBody] ResendEmailDto resendEmailDto)
         {
             var user = await authService.GetUserByEmailAsync(resendEmailDto.Email);
@@ -79,4 +92,5 @@ namespace WatchReadShare.API.Controllers
         }
 
     }
+
 }

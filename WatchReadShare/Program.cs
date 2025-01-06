@@ -63,38 +63,7 @@ var app = builder.Build();
 
 // ROle ekleme iþlemleri gpt
 
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 
-    // Dinamik roller: Kolayca eklenebilir.
-    string[] roles = { "Admin", "User" };
-    foreach (var role in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-        {
-            await roleManager.CreateAsync(new AppRole());
-        }
-    }
-
-    // Varsayýlan admin kullanýcý
-    var adminEmail = "admin01@gmail.com";
-    var adminUser = await userManager.FindByEmailAsync(adminEmail);
-    if (adminUser == null)
-    {
-        var admin = new AppUser
-        {
-            UserName = "admin01",
-            Email = adminEmail,
-            Name = "Admin",
-            Surname = "koc"
-
-        };
-        await userManager.CreateAsync(admin, "123456aA*");
-        await userManager.AddToRoleAsync(admin, "Admin");
-    }
-}
 
 
 

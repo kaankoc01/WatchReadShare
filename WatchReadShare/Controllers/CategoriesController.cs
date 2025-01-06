@@ -6,7 +6,7 @@ using WatchReadShare.Application.Features.Categories.Update;
 
 namespace WatchReadShare.API.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class CategoriesController(ICategoryService categoryService) : CustomBaseController
     {
         [HttpGet]
