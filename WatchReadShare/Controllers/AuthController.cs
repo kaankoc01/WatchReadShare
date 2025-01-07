@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WatchReadShare.Application.Features.Auth;
+using WatchReadShare.Application.Features.Auth.Create;
+using WatchReadShare.Application.Features.Auth.Dtos;
 
 namespace WatchReadShare.API.Controllers
 {
     public class AuthController(IAuthService authService) : CustomBaseController
     {
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
             var result = await authService.RegisterAsync(registerDto);
@@ -17,14 +19,14 @@ namespace WatchReadShare.API.Controllers
 
             return Ok(new { Token = result });
         }
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             var tokenResponse = await authService.LoginAsync(loginDto);
             return Ok(tokenResponse);
         }
 
-        [HttpPost]
+        [HttpPost("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail(ConfirmEmailDto confirmEmailDto)
         {
             var result = await authService.ConfirmEmailAsync(confirmEmailDto);
@@ -39,7 +41,7 @@ namespace WatchReadShare.API.Controllers
 
 
         [HttpGet("confirm-email")]
-        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        public async Task<IActionResult> ConfirmEmaild(string token, string email)
         {
             var user = await authService.GetUserByEmailAsync(email);
             if (user == null)

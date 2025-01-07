@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using WatchReadShare.Domain.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text;
 using WatchReadShare.FrontEnd.Models;
 
 namespace WatchReadShare.FrontEnd.Controllers
 {
-    public class ConfirmMailController(UserManager<AppUser> userManager) : Controller
+    public class ConfirmMailController(IHttpClientFactory httpClientFactory) : Controller
     {
         [HttpGet]
         public IActionResult Index()
@@ -15,16 +15,24 @@ namespace WatchReadShare.FrontEnd.Controllers
           //  confirmMailViewModel.Mail = value.ToString();
             return View();
         }
+        //ConfirmMail
         [HttpPost]
         public async Task<IActionResult> Index(ConfirmMailViewModel confirmMailViewModel)
         {
-            var user = await userManager.FindByEmailAsync(confirmMailViewModel.Mail);
-            if (user.ConfirmCode == confirmMailViewModel.ConfirmCode) 
+            // HttpClientHandler ile SSL doğrulamasını atlıyoruz.
+            var clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
+            // IHttpClientFactory kullanarak client'ı oluşturuyoruz ve custom handler ekliyoruz.
+            var client = new HttpClient(clientHandler);
+            var jsondata = JsonConvert.SerializeObject(confirmMailViewModel); //eklerken serialize
+            StringContent stringContent = new StringContent(jsondata, Encoding.UTF8, "application/json");
+            var responseMessage = await client.PostAsync("https://localhost:7113/api/Auth/ConfirmEmail", stringContent);
+            if (responseMessage.IsSuccessStatusCode)
             {
-                user.EmailConfirmed = true;
-                await userManager.UpdateAsync(user);
                 return RedirectToAction("Index", "Login");
             }
+
             return View();
         }
     }

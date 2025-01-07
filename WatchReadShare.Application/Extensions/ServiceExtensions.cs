@@ -10,6 +10,7 @@ using WatchReadShare.Application.Features.Comments;
 using WatchReadShare.Application.Features.Genres;
 using WatchReadShare.Application.Features.Movies;
 using WatchReadShare.Application.Features.Serials;
+using WatchReadShare.Application.Features.Token;
 
 namespace WatchReadShare.Application.Extensions
 {

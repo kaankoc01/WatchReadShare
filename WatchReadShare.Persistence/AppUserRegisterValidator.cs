@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using WatchReadShare.Application.Features.Auth;
+using WatchReadShare.Application.Features.Auth.Create;
 
 namespace WatchReadShare.Persistence
 {

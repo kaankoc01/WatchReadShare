@@ -1,4 +1,4 @@
-﻿namespace WatchReadShare.Application.Features.Auth
+﻿namespace WatchReadShare.Application.Features.Mail
 {
     public interface IMailService
     {

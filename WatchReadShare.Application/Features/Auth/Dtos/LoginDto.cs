@@ -1,4 +1,4 @@
-﻿namespace WatchReadShare.Application.Features.Auth
+﻿namespace WatchReadShare.Application.Features.Auth.Dtos
 {
     public class LoginDto()
     {

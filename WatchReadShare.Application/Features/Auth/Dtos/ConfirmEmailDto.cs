@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WatchReadShare.Application.Features.Auth
+namespace WatchReadShare.Application.Features.Auth.Dtos
 {
     public class ConfirmEmailDto
     {

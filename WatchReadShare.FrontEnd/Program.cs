@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using WatchReadShare.Application;
 using WatchReadShare.Application.Features.Auth;
+using WatchReadShare.Application.Features.Mail;
+using WatchReadShare.Application.Features.Token;
 using WatchReadShare.Domain.Entities;
 using WatchReadShare.Persistence;
 
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<Context>(options =>
 builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<Context>().AddDefaultTokenProviders();
 
 
+builder.Services.AddHttpClient();
 
 
 builder.Services.AddScoped<ITokenService, TokenService>();

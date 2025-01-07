@@ -2,14 +2,14 @@
 using MimeKit;
 using Microsoft.Extensions.Configuration;
 
-namespace WatchReadShare.Application.Features.Auth
+namespace WatchReadShare.Application.Features.Mail
 {
     public class MailService(IConfiguration configuration) : IMailService
     {
         public async Task<int> SendEmailAsync(string toEmail, string subject, string body)
         {
 
-          //  6 haneli rastgele doğrulama kodu oluştur
+            //  6 haneli rastgele doğrulama kodu oluştur
             int verificationCode = new Random().Next(100000, 999999);
 
             var email = new MimeMessage();

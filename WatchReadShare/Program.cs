@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using WatchReadShare.Application.Extensions;
 using WatchReadShare.Application.Features.Auth;
+using WatchReadShare.Application.Features.Mail;
 using WatchReadShare.Domain.Entities;
 using WatchReadShare.Persistence;
 using WatchReadShare.Persistence.Extensions;
@@ -62,6 +63,8 @@ var app = builder.Build();
 
 
 // ROle ekleme iþlemleri gpt
+
+
 
 
 

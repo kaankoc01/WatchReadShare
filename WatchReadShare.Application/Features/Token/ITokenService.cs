@@ -1,4 +1,4 @@
-﻿namespace WatchReadShare.Application
+﻿namespace WatchReadShare.Application.Features.Token
 {
     public interface ITokenService
     {

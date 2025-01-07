@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace WatchReadShare.Application
+namespace WatchReadShare.Application.Features.Token
 {
     public class TokenService(IConfiguration configuration) : ITokenService
     {

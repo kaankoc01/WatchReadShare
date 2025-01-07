@@ -5,7 +5,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Http.HttpResults;
+using WatchReadShare.Application.Features.Auth.Create;
+using WatchReadShare.Application.Features.Auth.Dtos;
+using WatchReadShare.Application.Features.Mail;
+using WatchReadShare.Application.Features.Token;
 using WatchReadShare.Domain.Entities;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
@@ -115,8 +118,8 @@ namespace WatchReadShare.Application.Features.Auth
         }
 
         
-
-        private string GenerateToken(AppUser user)
+        // silinecek sanırım.
+        public string GenerateToken(AppUser user)
         {
             var claims = new[]
             {
