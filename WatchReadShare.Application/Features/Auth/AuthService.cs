@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Http.HttpResults;
 using WatchReadShare.Domain.Entities;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
@@ -27,29 +28,21 @@ namespace WatchReadShare.Application.Features.Auth
             {
                 int verificationCode = new Random().Next(100000, 999999);
 
-                // Email doğrulama token'ı oluştur
-                //var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-
 
                 // Doğrulama kodunu kullanıcıya ata
                 user.ConfirmCode = verificationCode;
                 await userManager.UpdateAsync(user);
 
                 // E-posta gönderimi (Verification Code Dahil)
-                 await mailService.SendEmailAsync(user.Email, "E-posta Doğrulama", "Lütfen doğrulama kodunuzu girerek hesabınızı doğrulayın.");
+                await mailService.SendEmailAsync(user.Email, "E-posta Doğrulama", $"{verificationCode} Lütfen bu doğrulama kodunu girerek hesabınızı doğrulayın.");
 
-
-                
                 return new RegisterResultDto
                 {
                     Success = true,
-                    Message = "Kullanıcı başarıyla oluşturuldu. Lütfen emailinize gelen doğrulama kodunu girerek hesabınızı doğrulayın."
+                    Message = "Kullanıcı başarıyla oluşturuldu. Lütfen emailinize gelen doğrulama kodunu girerek hesabınızı doğrulayın.",
+                    Token = "sample-jwt-token"
                 };
-
-
-                // return GenerateToken(user);
             }
-
             return null; // Register başarısızsa null dön.
         }
 

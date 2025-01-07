@@ -6,7 +6,7 @@ using WatchReadShare.FrontEnd.Models;
 
 namespace WatchReadShare.FrontEnd.Controllers
 {
-    public class LoginController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager) : Controller
+    public class LoginController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager,IAuthService authService) : Controller
     {
         [HttpGet]
         public IActionResult Index()
@@ -16,19 +16,8 @@ namespace WatchReadShare.FrontEnd.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(LoginDto loginDto)
         {
-            var result = await signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, false, true);
-            if (result.Succeeded)
-            {
-                var user = await userManager.FindByEmailAsync(loginDto.Email);
-                if (user.EmailConfirmed == true)
-                {
-
-                    return RedirectToAction("Index", "MyProfile");
-                }
-                // else lütfen mail adresinizi doğrulayın.  
-            }
-            // kullanıcı adı veya şifre hatalı
-            return View();
+            var values = await authService.LoginAsync(loginDto);
+            return RedirectToAction("Index", "MyProfile");
         }
     }
 }

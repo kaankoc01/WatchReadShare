@@ -1,13 +1,9 @@
-using Microsoft.EntityFrameworkCore;
-using System;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using WatchReadShare.Application;
+using WatchReadShare.Application.Features.Auth;
 using WatchReadShare.Domain.Entities;
 using WatchReadShare.Persistence;
-using WatchReadShare.Application;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Net;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,9 +17,9 @@ builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<Contex
 
 
 
-
-
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IMailService, MailService>();
 
 var app = builder.Build();
 

@@ -10,7 +10,7 @@ namespace WatchReadShare.Application.Features.Auth
         {
 
           //  6 haneli rastgele doğrulama kodu oluştur
-          var verificationCode = new Random().Next(100000, 999999);
+            int verificationCode = new Random().Next(100000, 999999);
 
             var email = new MimeMessage();
             email.Sender = MailboxAddress.Parse(configuration["MailSettings:Mail"]);
