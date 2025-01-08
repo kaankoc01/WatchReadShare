@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using RabbitMQ.Client;
 using System.Net;
 using System.Text;
 using WatchReadShare.Application.Extensions;
@@ -31,6 +32,14 @@ builder.Services.AddIdentity<AppUser, AppRole>()
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IMailService,MailService>();
+builder.Services.AddSingleton<IConnectionFactory>(sp =>
+    new ConnectionFactory
+    {
+        HostName = "localhost", // RabbitMQ'nun çalýþtýðý makine
+        UserName = "guest",     // Varsayýlan kullanýcý adý
+        Password = "guest"      // Varsayýlan þifre
+    });
+
 
 
 

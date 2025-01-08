@@ -6,6 +6,7 @@ using WatchReadShare.Persistence.Categories;
 using WatchReadShare.Persistence.Comments;
 using WatchReadShare.Persistence.Genres;
 using WatchReadShare.Persistence.Movies;
+using WatchReadShare.Persistence.RabbitMQ;
 using WatchReadShare.Persistence.Serials;
 
 namespace WatchReadShare.Persistence.Extensions
@@ -28,6 +29,9 @@ namespace WatchReadShare.Persistence.Extensions
             services.AddScoped<ISerialRepository, SerialRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+
+            services.AddSingleton<RabbitMqProducer>();
+            services.AddSingleton<RabbitMqConsumer>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

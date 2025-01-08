@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using RabbitMQ.Client;
 using WatchReadShare.Application.Features.Auth;
 using WatchReadShare.Application.Features.Mail;
 using WatchReadShare.Application.Features.Token;
@@ -22,6 +23,15 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IMailService, MailService>();
+
+builder.Services.AddSingleton<IConnectionFactory>(sp =>
+    new ConnectionFactory
+    {
+        HostName = "localhost", // RabbitMQ'nun çalýþtýðý makine
+        UserName = "guest",     // Varsayýlan kullanýcý adý
+        Password = "guest"      // Varsayýlan þifre
+    });
+
 
 var app = builder.Build();
 
