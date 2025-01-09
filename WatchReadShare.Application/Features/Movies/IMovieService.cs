@@ -12,5 +12,6 @@ namespace WatchReadShare.Application.Features.Movies
         Task<ServiceResult<CreateMovieResponse>> CreateAsync(CreateMovieRequest request);
         Task<ServiceResult> UpdateAsync(UpdateMovieRequest request);
         Task<ServiceResult> DeleteAsync(int id);
+        Task<string?> GetMovieDetailAsync(int id);
     }
 }

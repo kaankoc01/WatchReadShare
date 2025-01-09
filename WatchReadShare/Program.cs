@@ -35,9 +35,9 @@ builder.Services.AddScoped<IMailService,MailService>();
 builder.Services.AddSingleton<IConnectionFactory>(sp =>
     new ConnectionFactory
     {
-        HostName = "localhost", // RabbitMQ'nun çalýþtýðý makine
-        UserName = "guest",     // Varsayýlan kullanýcý adý
-        Password = "guest"      // Varsayýlan þifre
+        HostName = "localhost", // RabbitMQ'nun ï¿½alï¿½ï¿½tï¿½ï¿½ï¿½ makine
+        UserName = "guest",     // Varsayï¿½lan kullanï¿½cï¿½ adï¿½
+        Password = "guest"      // Varsayï¿½lan ï¿½ifre
     });
 
 
@@ -71,7 +71,7 @@ ServicePointManager.ServerCertificateValidationCallback =
 var app = builder.Build();
 
 
-// ROle ekleme iþlemleri gpt
+// ROle ekleme iï¿½lemleri gpt
 
 
 

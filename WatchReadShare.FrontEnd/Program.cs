@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-// Veritabaný baðlantýsýný yapýlandýr
+// Veritabanï¿½ baï¿½lantï¿½sï¿½nï¿½ yapï¿½landï¿½r
 builder.Services.AddDbContext<Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<Context>().AddDefaultTokenProviders();
@@ -27,11 +27,30 @@ builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddSingleton<IConnectionFactory>(sp =>
     new ConnectionFactory
     {
-        HostName = "localhost", // RabbitMQ'nun çalýþtýðý makine
-        UserName = "guest",     // Varsayýlan kullanýcý adý
-        Password = "guest"      // Varsayýlan þifre
+        HostName = "localhost", // RabbitMQ'nun ï¿½alï¿½ï¿½tï¿½ï¿½ï¿½ makine
+        UserName = "guest",     // Varsayï¿½lan kullanï¿½cï¿½ adï¿½
+        Password = "guest"      // Varsayï¿½lan ï¿½ifre
     });
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = "Cookies";
+    options.DefaultChallengeScheme = "Cookies";
+})
+.AddCookie("Cookies", options =>
+{
+    options.LoginPath = "/login";
+    options.LogoutPath = "/logout";
+    options.AccessDeniedPath = "/login";
+});
+
+// Session desteÄŸi ekle
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -52,6 +71,9 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Register}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Session middleware'ini ekle
+app.UseSession();
 
 app.Run();

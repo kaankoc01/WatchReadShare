@@ -1,46 +1,131 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WatchReadShare.FrontEnd</title>
+    <title>@ViewData["Title"] - WatchReadShare</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/WatchReadShare.FrontEnd.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WatchReadShare.FrontEnd</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="/">WatchReadShare</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                <div class="collapse navbar-collapse" id="navbarMain">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Filmler</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/movies/reviews">İncelemeler</a></li>
+                                <li><a class="dropdown-item" href="/movies/top-rated">En İyiler</a></li>
+                                <li><a class="dropdown-item" href="/movies/new-releases">Yeni Çıkanlar</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Diziler</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/series/reviews">İncelemeler</a></li>
+                                <li><a class="dropdown-item" href="/series/top-rated">En İyiler</a></li>
+                                <li><a class="dropdown-item" href="/series/trending">Trend</a></li>
+                            </ul>
                         </li>
+                        <li class="nav-item"><a class="nav-link" href="/lists">Listeler</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>
                     </ul>
+                    <div class="d-flex align-items-center">
+                        <form class="d-flex me-3">
+                            <input class="form-control search-input" type="search" placeholder="Film, dizi veya yazar ara...">
+                            <button class="btn btn-search" type="submit"><i class="fas fa-search"></i></button>
+                        </form>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="dropdown user-menu">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
+                                    <img src="/images/default-avatar.png" class="user-avatar me-2" alt="Profil">
+                                    <span class="user-name">@User.Identity.Name</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li class="dropdown-header">
+                                        <div class="d-flex align-items-center">
+                                            <img src="/images/default-avatar.png" class="user-avatar-sm me-2" alt="Profil">
+                                            <div>
+                                                <strong>@User.Identity.Name</strong>
+                                                <div class="small text-muted">@User.Claims.FirstOrDefault(c => c.Type == "email")?.Value</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="/MyProfile">
+                                            <i class="fas fa-user me-2"></i>Profilim
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="/watchlist">
+                                            <i class="fas fa-list me-2"></i>İzleme Listem
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="/settings">
+                                            <i class="fas fa-cog me-2"></i>Ayarlar
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" href="/logout">
+                                            <i class="fas fa-sign-out-alt me-2"></i>Çıkış Yap
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a href="/login" class="btn btn-outline-light me-2">Giriş</a>
+                            <a href="/register" class="btn btn-primary">Üye Ol</a>
+                        }
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="footer mt-5">
         <div class="container">
-            &copy; 2025 - WatchReadShare.FrontEnd - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>WatchReadShare</h5>
+                    <p>Film ve dizi tutkunları için en iyi içerikler.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Hızlı Bağlantılar</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/about">Hakkımızda</a></li>
+                        <li><a href="/contact">İletişim</a></li>
+                        <li><a href="/privacy">Gizlilik Politikası</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Bizi Takip Edin</h5>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

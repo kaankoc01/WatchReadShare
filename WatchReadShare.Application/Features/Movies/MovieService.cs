@@ -92,5 +92,10 @@ namespace WatchReadShare.Application.Features.Movies
             await unitOfWork.SaveChangesAsync();
             return ServiceResult.Success(HttpStatusCode.NoContent);
         }
+
+        public Task<string?> GetMovieDetailAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

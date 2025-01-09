@@ -1,0 +1,46 @@
+@model WatchReadShare.FrontEnd.Models.MovieDetailViewModel
+
+<div class="comment-form mb-4">
+    <h4>Yorum Yap</h4>
+    <form asp-controller="Movie" asp-action="AddComment" method="post">
+        <input type="hidden" name="MovieId" value="@Model.Id" />
+        <div class="mb-3">
+            <label for="commentText" class="form-label">Yorumunuz</label>
+            <textarea class="form-control" name="Text" id="commentText" rows="3" required 
+                placeholder="Film hakkında düşüncelerinizi paylaşın..."></textarea>
+            <div class="invalid-feedback">
+                Lütfen bir yorum yazın.
+            </div>
+        </div>
+        <div class="rating-section mb-3">
+            <label class="form-label">Puanınız</label>
+            <div class="rating-input">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    <input type="radio" class="btn-check" name="Rating" id="rating@(i)" value="@i" required>
+                    <label class="btn btn-outline-warning" for="rating@(i)">
+                        <i class="fas fa-star"></i>
+                    </label>
+                }
+            </div>
+            <div class="invalid-feedback">
+                Lütfen bir puan verin.
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane me-2"></i>Yorumu Gönder
+        </button>
+    </form>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="commentToast" class="toast" role="alert">
+        <div class="toast-header">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong class="me-auto">Bilgi</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+        </div>
+    </div>
+</div> 
