@@ -57,22 +57,32 @@ namespace WatchReadShare.Application.Features.Serials
             serial.CategoryId = serialCategory.Id;
             await serialRepository.AddAsync(serial);
             await unitOfWork.SaveChangesAsync();
+
             return ServiceResult<CreateSerialResponse>.SuccessAsCreated(new CreateSerialResponse(serial.Id), $"api/serial/{serial.Id}");
         }
 
         public async Task<ServiceResult> UpdateAsync(UpdateSerialRequest request)
         {
+            var existingSerial = await serialRepository.GetByIdAsync(request.Id);
+            if (existingSerial == null)
+            {
+                return ServiceResult.Fail("Dizi bulunamadı.", HttpStatusCode.NotFound);
+            }
+
             var isSerialNameExist = await serialRepository.AnyAsync(x => x.Name == request.Name && x.Id != request.Id);
             if (isSerialNameExist)
             {
-                return ServiceResult.Fail("Bu isimde bir dizi zaten var.");
+                return ServiceResult.Fail("Bu isimde bir dizi zaten var.", HttpStatusCode.BadRequest);
             }
-            var serials = mapper.Map<Serial>(request);
-            serials.Id = request.Id;
-            serialRepository.Update(serials);
-            await unitOfWork.SaveChangesAsync();
-            return ServiceResult.Success(HttpStatusCode.NoContent);
 
+            existingSerial.Name = request.Name;
+            existingSerial.Description = request.Description;
+            existingSerial.GenreId = request.GenreId;
+
+            serialRepository.Update(existingSerial);
+            await unitOfWork.SaveChangesAsync();
+            
+            return ServiceResult.Success(HttpStatusCode.NoContent);
         }
 
         public async Task<ServiceResult> DeleteAsync(int id)

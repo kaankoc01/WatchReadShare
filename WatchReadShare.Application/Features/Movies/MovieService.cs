@@ -50,8 +50,6 @@ namespace WatchReadShare.Application.Features.Movies
                 throw new Exception("Film kategorisi bulunamadı.");
             }
 
-            
-
             var anyMovie = await movieRepository.AnyAsync(x => x.Name == request.Name);
             if (anyMovie)
             {
@@ -66,18 +64,30 @@ namespace WatchReadShare.Application.Features.Movies
 
         public async Task<ServiceResult> UpdateAsync(UpdateMovieRequest request)
         {
+            // Önce mevcut filmi veritabanından al
+            var existingMovie = await movieRepository.GetByIdAsync(request.Id);
+            if (existingMovie == null)
+            {
+                return ServiceResult.Fail("Film bulunamadı.", HttpStatusCode.NotFound);
+            }
 
-           
-
+            // İsim kontrolü
             var isMovieNameExist = await movieRepository.AnyAsync(x => x.Name == request.Name && x.Id != request.Id);
             if (isMovieNameExist)
             {
                 return ServiceResult.Fail("Bu isimde bir film zaten var.", HttpStatusCode.BadRequest);
             }
-            var movie = mapper.Map<Movie>(request);
-            movie.Id = request.Id;
-            movieRepository.Update(movie);
+
+            // Mevcut filmin özelliklerini güncelle
+            existingMovie.Name = request.Name;
+            existingMovie.Description = request.Description;
+            existingMovie.GenreId = request.GenreId;
+            // Diğer özellikleri güncelle...
+            // CategoryId'yi değiştirmiyoruz
+
+            movieRepository.Update(existingMovie);
             await unitOfWork.SaveChangesAsync();
+            
             return ServiceResult.Success(HttpStatusCode.NoContent);
         }
 

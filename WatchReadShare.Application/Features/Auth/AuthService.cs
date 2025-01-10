@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using WatchReadShare.Application.Features.Auth.Create;
@@ -31,6 +32,8 @@ namespace WatchReadShare.Application.Features.Auth
             {
                 int verificationCode = new Random().Next(100000, 999999);
 
+            // Yeni kayıt olan kullanıcıya User rolü ata
+            await userManager.AddToRoleAsync(user, "User");
 
                 // Doğrulama kodunu kullanıcıya ata
                 user.ConfirmCode = verificationCode;
@@ -151,10 +154,7 @@ namespace WatchReadShare.Application.Features.Auth
             return await userManager.FindByIdAsync(Id);
         }
 
-        //public async Task<IdentityResult> ConfirmEmailAsync(AppUser user, string token)
-        //{
-        //    return await userManager.ConfirmEmailAsync(user, token);
-        //}
+       
 
         public async Task<bool> ConfirmEmailAsync(ConfirmEmailDto confirmEmailDto)
         {
@@ -194,6 +194,49 @@ namespace WatchReadShare.Application.Features.Auth
             );
 
             return true; // Başarıyla email gönderildi.
+        }
+
+        public async Task<ServiceResult<TokenResponse>> CreateTokenAsync(LoginDto loginDto)
+        {
+            var user = await userManager.FindByEmailAsync(loginDto.Email);
+            if (user == null)
+            {
+                return ServiceResult<TokenResponse>.Fail("Email veya şifre hatalı", HttpStatusCode.BadRequest);
+            }
+
+            if (!await userManager.CheckPasswordAsync(user, loginDto.Password))
+            {
+                return ServiceResult<TokenResponse>.Fail("Email veya şifre hatalı", HttpStatusCode.BadRequest);
+            }
+
+            // Kullanıcının rollerini al
+            var roles = await userManager.GetRolesAsync(user);
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                // Rolleri claim olarak ekle
+                new Claim(ClaimTypes.Role, roles.FirstOrDefault() ?? "User") // Varsayılan rol User
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expiry = DateTime.Now.AddMinutes(30);
+
+            var token = new JwtSecurityToken(
+                issuer: configuration["Jwt:Issuer"],
+                audience: configuration["Jwt:Audience"],
+                claims: claims,
+                expires: expiry,
+                signingCredentials: creds
+            );
+
+            return ServiceResult<TokenResponse>.Success(new TokenResponse
+            {
+                AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
+                ExpiresAt = expiry
+            });
         }
 
     }

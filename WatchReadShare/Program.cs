@@ -40,11 +40,6 @@ builder.Services.AddSingleton<IConnectionFactory>(sp =>
         Password = "guest"      // Varsay�lan �ifre
     });
 
-
-
-
-
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -70,14 +65,65 @@ ServicePointManager.ServerCertificateValidationCallback =
 
 var app = builder.Build();
 
+// Rol oluşturma
+using (var scope = app.Services.CreateScope())
+{
+    try 
+    {
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+        var context = scope.ServiceProvider.GetRequiredService<Context>();
 
-// ROle ekleme i�lemleri gpt
+        // Veritabanını oluştur
+        await context.Database.MigrateAsync();
 
+        // Rolleri oluştur
+        if (!await roleManager.RoleExistsAsync("Admin"))
+        {
+            var adminRole = new AppRole { Name = "Admin" };
+            await roleManager.CreateAsync(adminRole);
+        }
+        
+        if (!await roleManager.RoleExistsAsync("User"))
+        {
+            var userRole = new AppRole { Name = "User" };
+            await roleManager.CreateAsync(userRole);
+        }
 
+        // Admin kullanıcısı oluştur
+        var adminEmail = "admin@example.com";
+        var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
+        if (adminUser == null)
+        {
+            var admin = new AppUser
+            {
+                UserName = "admin",
+                Email = adminEmail,
+                EmailConfirmed = true,
+                Name = "Admin",
+                Surname = "User"
+            };
 
-
-
+            var result = await userManager.CreateAsync(admin, "Admin123*");
+            
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(admin, "Admin");
+            }
+            else
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new Exception($"Admin kullanıcısı oluşturulamadı: {errors}");
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Rol ve admin kullanıcısı oluşturulurken bir hata oluştu.");
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

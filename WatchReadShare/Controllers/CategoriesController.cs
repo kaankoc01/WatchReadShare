@@ -21,12 +21,15 @@ namespace WatchReadShare.API.Controllers
         [HttpGet("{id:int}/movies")]
         public async Task<IActionResult> GetCategoryWithMovie(int id) => CreateActionResult(await categoryService.GetCategoryWithMovieAsync(id));
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateCategory(CreateCategoryRequest request) => CreateActionResult(await categoryService.CreateAsync(request));
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateCategory(UpdateCategoryRequest request) => CreateActionResult(await categoryService.UpdateAsync(request));
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteCategory(int id) => CreateActionResult(await categoryService.DeleteAsync(id));
     }
