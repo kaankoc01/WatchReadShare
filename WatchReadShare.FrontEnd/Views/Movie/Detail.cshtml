@@ -1,6 +1,6 @@
 @model MovieDetailViewModel
 @{
-    ViewData["Title"] = Model.Title;
+    ViewData["Title"] = Model.Name;
 }
 
 <div class="movie-detail-section">
@@ -8,94 +8,52 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="movie-header">
-                    <h1 class="movie-title">@Model.Title</h1>
+                    <h1 class="movie-title">@Model.Name</h1>
                     <div class="movie-meta">
-                        <span class="year">@Model.Year</span>
-                        <span class="duration">@Model.Duration dk</span>
-                        <span class="rating">
-                            @for (int i = 0; i < 5; i++)
-                            {
-                                <i class="@(i < Model.Rating ? "fas" : "far") fa-star"></i>
-                            }
-                        </span>
+                        @if (Model.Year.HasValue)
+                        {
+                            <span><i class="fas fa-calendar"></i> @Model.Year</span>
+                        }
                     </div>
                 </div>
 
-                <div class="movie-content mt-4">
-                    <img src="@Model.ImageUrl" class="movie-poster mb-4" alt="@Model.Title">
+                <div class="movie-content">
+                    <img src="@(Model.ImageUrl ?? "/images/default-movie.jpg")" alt="@Model.Name" class="movie-poster">
                     <p class="movie-description">@Model.Description</p>
                 </div>
 
-                <!-- Yorum Bölümü -->
-                <div class="comments-section mt-5">
+                <!-- Yorum bölümü -->
+                <div class="comments-section">
                     <h3>Yorumlar (@Model.Comments.Count)</h3>
                     
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <partial name="_AddComment" model="Model" />
+                        <partial name="_AddComment" model="new AddCommentViewModel { MovieId = Model.Id }" />
                     }
                     else
                     {
                         <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Yorum yapabilmek için lütfen <a href="/login" class="alert-link">giriş yapın</a>.
+                            Yorum yapabilmek için lütfen <a href="/login">giriş yapın</a>.
                         </div>
                     }
 
-                    <div class="comments-list">
-                        @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreatedDate))
-                        {
-                            <div class="comment-item">
-                                <div class="comment-header d-flex justify-content-between">
-                                    <div class="user-info">
-                                        <img src="@comment.UserAvatar" class="avatar" alt="@comment.UserName">
-                                        <span class="username">@comment.UserName</span>
-                                    </div>
-                                    <div class="comment-meta">
-                                        <div class="rating">
-                                            @for (int i = 0; i < 5; i++)
-                                            {
-                                                <i class="@(i < comment.Rating ? "fas" : "far") fa-star"></i>
-                                            }
-                                        </div>
-                                        <span class="date">@comment.CreatedDate.ToString("dd.MM.yyyy")</span>
-                                    </div>
-                                </div>
-                                <div class="comment-content">
-                                    <p>@comment.Text</p>
-                                </div>
-                                <div class="comment-actions">
-                                    <button class="btn btn-sm btn-like @(comment.IsLiked ? "active" : "")" 
-                                        data-comment-id="@comment.Id">
-                                        <i class="far fa-thumbs-up"></i>
-                                        <span class="like-count">@comment.LikeCount</span>
+                    @foreach (var comment in Model.Comments.OrderByDescending(c => c.Created))
+                    {
+                        <div class="comment-item">
+                            <div class="comment-content">
+                                <p>@comment.Content</p>
+                            </div>
+                            <div class="comment-meta">
+                                <span class="date">@comment.Created.ToString("dd.MM.yyyy HH:mm")</span>
+                                <div class="actions">
+                                    <button class="btn btn-sm @(comment.IsLiked ? "btn-primary" : "btn-outline-primary")"
+                                            onclick="likeComment(@comment.Id)">
+                                        <i class="fas fa-thumbs-up"></i> @comment.LikeCount
                                     </button>
-                                    @if (User.Identity.Name == comment.UserName)
-                                    {
-                                        <button class="btn btn-sm btn-delete" data-comment-id="@comment.Id">
-                                            <i class="far fa-trash-alt"></i>
-                                        </button>
-                                    }
                                 </div>
                             </div>
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="movie-sidebar">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Film Bilgileri</h5>
-                            <ul class="movie-info-list">
-                                <li><strong>Yönetmen:</strong> @Model.Director</li>
-                                <li><strong>Oyuncular:</strong> @Model.Cast</li>
-                                <li><strong>Tür:</strong> @Model.Genres</li>
-                                <li><strong>Vizyon Tarihi:</strong> @Model.ReleaseDate.ToString("dd.MM.yyyy")</li>
-                            </ul>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>

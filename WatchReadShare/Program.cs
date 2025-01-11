@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RabbitMQ.Client;
-using System.Net;
 using System.Text;
 using WatchReadShare.Application.Extensions;
 using WatchReadShare.Application.Features.Auth;
@@ -15,9 +14,7 @@ using WatchReadShare.Persistence.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -35,9 +32,9 @@ builder.Services.AddScoped<IMailService,MailService>();
 builder.Services.AddSingleton<IConnectionFactory>(sp =>
     new ConnectionFactory
     {
-        HostName = "localhost", // RabbitMQ'nun �al��t��� makine
-        UserName = "guest",     // Varsay�lan kullan�c� ad�
-        Password = "guest"      // Varsay�lan �ifre
+        HostName = "localhost",
+        UserName = "guest",
+        Password = "guest"
     });
 
 builder.Services.AddAuthentication(options =>
@@ -57,14 +54,19 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
-ServicePointManager.ServerCertificateValidationCallback =
-    (sender, certificate, chain, sslPolicyErrors) => true;
 
-
-
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:5247")
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials();
+    });
+});
 
 var app = builder.Build();
-
 // Rol oluşturma
 using (var scope = app.Services.CreateScope())
 {
@@ -105,7 +107,7 @@ using (var scope = app.Services.CreateScope())
                 Surname = "User"
             };
 
-            var result = await userManager.CreateAsync(admin, "Admin123*");
+            var result = await userManager.CreateAsync(admin, "Admin123!");
             
             if (result.Succeeded)
             {
@@ -135,6 +137,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors();
 
 app.MapControllers();
 

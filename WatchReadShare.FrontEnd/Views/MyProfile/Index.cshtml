@@ -10,30 +10,14 @@
             <div class="row align-items-center">
                 <div class="col-md-3 text-center">
                     <div class="profile-image-container">
-                        <img src="@(Model?.ProfileImage ?? "/images/default-avatar.png")" 
-                             alt="@Model?.UserName" class="profile-image">
+                        <img src="/images/default-avatar.png" alt="@Model.UserName" class="profile-image">
                     </div>
                 </div>
                 <div class="col-md-9">
                     <div class="profile-info">
-                        <h1 class="profile-username">@Model?.UserName</h1>
-                        <div class="profile-stats">
-                            <div class="stat-item">
-                                <i class="fas fa-star"></i>
-                                <span class="stat-value">@Model?.TotalReviews</span>
-                                <span class="stat-label">İnceleme</span>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-thumbs-up"></i>
-                                <span class="stat-value">@Model?.TotalLikes</span>
-                                <span class="stat-label">Beğeni</span>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span class="stat-value">@Model?.JoinDate.ToString("MMM yyyy")</span>
-                                <span class="stat-label">Katılım</span>
-                            </div>
-                        </div>
+                        <h1 class="profile-username">@Model.UserName</h1>
+                        <p>@Model.Name @Model.Surname</p>
+                        <p>@Model.Email</p>
                     </div>
                 </div>
             </div>
@@ -44,18 +28,13 @@
             <ul class="nav nav-tabs" id="profileTabs" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" id="reviews-tab" data-bs-toggle="tab" href="#reviews">
-                        <i class="fas fa-pen-alt me-2"></i>İncelemelerim
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="watchlist-tab" data-bs-toggle="tab" href="#watchlist">
-                        <i class="fas fa-list me-2"></i>İzleme Listem
+                        <i class="fas fa-pen-alt me-2"></i>Yorumlarım
                     </a>
                 </li>
             </ul>
 
             <div class="tab-content" id="profileTabContent">
-                <!-- İncelemeler -->
+                <!-- Yorumlar -->
                 <div class="tab-pane fade show active" id="reviews">
                     @if (Model.Reviews.Any())
                     {
@@ -63,26 +42,13 @@
                         {
                             <div class="review-card">
                                 <div class="row">
-                                    <div class="col-md-3">
-                                        <img src="@review.MovieImage" alt="@review.MovieTitle" class="review-movie-image">
-                                    </div>
-                                    <div class="col-md-9">
-                                        <h4 class="movie-title">@review.MovieTitle</h4>
-                                        <div class="rating mb-2">
-                                            @for (int i = 0; i < 5; i++)
-                                            {
-                                                <i class="@(i < review.Rating ? "fas" : "far") fa-star"></i>
-                                            }
-                                            <span class="review-date ms-2">@review.CreatedDate.ToString("dd.MM.yyyy")</span>
-                                        </div>
-                                        <p class="review-text">@review.ReviewText</p>
-                                        <div class="review-actions">
-                                            <span class="like-count">
+                                    <div class="col-md-12">
+                                        <p class="review-text">@review.Content</p>
+                                        <div class="review-meta">
+                                            <span class="date">@review.Created.ToString("dd.MM.yyyy HH:mm")</span>
+                                            <span class="likes">
                                                 <i class="fas fa-thumbs-up"></i> @review.LikeCount
                                             </span>
-                                            <button class="btn btn-sm btn-outline-danger">
-                                                <i class="fas fa-trash"></i> Sil
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -93,51 +59,7 @@
                     {
                         <div class="empty-state">
                             <i class="fas fa-pen-alt"></i>
-                            <p>Henüz bir inceleme yazmadınız.</p>
-                        </div>
-                    }
-                </div>
-
-                <!-- İzleme Listesi -->
-                <div class="tab-pane fade" id="watchlist">
-                    @if (Model.Watchlist.Any())
-                    {
-                        <div class="row">
-                            @foreach (var item in Model.Watchlist)
-                            {
-                                <div class="col-md-3 mb-4">
-                                    <div class="watchlist-card">
-                                        <img src="@item.ImageUrl" alt="@item.Title" class="watchlist-movie-image">
-                                        <div class="watchlist-info">
-                                            <h5 class="movie-title">@item.Title</h5>
-                                            <span class="status-badge @item.Status.ToLower()">@item.Status</span>
-                                            <div class="watchlist-actions">
-                                                <button class="btn btn-sm btn-outline-danger">
-                                                    <i class="fas fa-times"></i>
-                                                </button>
-                                                <div class="btn-group">
-                                                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" 
-                                                            data-bs-toggle="dropdown">
-                                                        Durum
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        <li><a class="dropdown-item" href="#">İzlendi</a></li>
-                                                        <li><a class="dropdown-item" href="#">İzleniyor</a></li>
-                                                        <li><a class="dropdown-item" href="#">İzlenecek</a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="empty-state">
-                            <i class="fas fa-list"></i>
-                            <p>İzleme listeniz boş.</p>
+                            <p>Henüz bir yorum yazmadınız.</p>
                         </div>
                     }
                 </div>

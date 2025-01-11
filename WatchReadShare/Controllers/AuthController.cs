@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WatchReadShare.Application.Features.Auth;
-using WatchReadShare.Application.Features.Auth.Create;
 using WatchReadShare.Application.Features.Auth.Dtos;
 
 namespace WatchReadShare.API.Controllers

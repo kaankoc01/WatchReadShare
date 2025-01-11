@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using WatchReadShare.Application.Features.Auth.Create;
 using WatchReadShare.Application.Features.Auth.Dtos;
 using WatchReadShare.Application.Features.Token;
 using WatchReadShare.Domain.Entities;

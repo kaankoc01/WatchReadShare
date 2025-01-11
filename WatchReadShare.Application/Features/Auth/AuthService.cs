@@ -6,7 +6,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
-using WatchReadShare.Application.Features.Auth.Create;
 using WatchReadShare.Application.Features.Auth.Dtos;
 using WatchReadShare.Application.Features.Mail;
 using WatchReadShare.Application.Features.Token;

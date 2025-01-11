@@ -9,16 +9,20 @@ using WatchReadShare.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Hot reload ve browser-link özelliklerini devre dışı bırak
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenLocalhost(5247);
+}).UseUrls("http://localhost:5247");
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-// Veritaban� ba�lant�s�n� yap�land�r
+// Veritabanı bağlantısını yapılandır
 builder.Services.AddDbContext<Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<Context>().AddDefaultTokenProviders();
 
-
 builder.Services.AddHttpClient();
-
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -27,9 +31,9 @@ builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddSingleton<IConnectionFactory>(sp =>
     new ConnectionFactory
     {
-        HostName = "localhost", // RabbitMQ'nun �al��t��� makine
-        UserName = "guest",     // Varsay�lan kullan�c� ad�
-        Password = "guest"      // Varsay�lan �ifre
+        HostName = "localhost",
+        UserName = "guest",
+        Password = "guest"
     });
 
 builder.Services.AddAuthentication(options =>
@@ -55,25 +59,19 @@ builder.Services.AddSession(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseDeveloperExceptionPage();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-// Session middleware'ini ekle
-app.UseSession();
 
 app.Run();

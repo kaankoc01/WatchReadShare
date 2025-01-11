@@ -1,4 +1,4 @@
-﻿namespace WatchReadShare.Application.Features.Auth.Create
+﻿namespace WatchReadShare.Application.Features.Auth.Dtos
 {
     public class RegisterDto()
     {
