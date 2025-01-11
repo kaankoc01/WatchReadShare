@@ -6,7 +6,7 @@ using WatchReadShare.Application.Features.Token;
 
 namespace WatchReadShare.FrontEnd.Controllers
 {
-    public class LoginController(IHttpClientFactory httpClientFactory) : Controller
+    public class LoginController : Controller
     {
         [HttpGet]
         public IActionResult Index()

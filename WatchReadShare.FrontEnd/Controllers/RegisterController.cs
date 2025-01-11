@@ -21,7 +21,7 @@ namespace WatchReadShare.FrontEnd.Controllers
         {
             return View();
         }
-        //Regiser
+        //Register
         [HttpPost]
         public async Task<IActionResult> Index(RegisterDto registerDto)
         {

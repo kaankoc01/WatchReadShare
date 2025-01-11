@@ -5,7 +5,7 @@ using WatchReadShare.FrontEnd.Models;
 
 namespace WatchReadShare.FrontEnd.Controllers
 {
-    public class ConfirmMailController(IHttpClientFactory httpClientFactory) : Controller
+    public class ConfirmMailController : Controller
     {
         [HttpGet]
         public IActionResult Index()

@@ -21,7 +21,7 @@ namespace WatchReadShare.FrontEnd.Controllers
             _httpClient = new HttpClient(handler);
             _configuration = configuration;
         }
-
+        [HttpGet]
         public async Task<IActionResult> Detail(int id)
         {
             try

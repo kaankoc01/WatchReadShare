@@ -3,40 +3,37 @@ using System.Text.Json;
 using WatchReadShare.FrontEnd.Models;
 using System.Net.Security;
 using WatchReadShare.Application.Features.Movies.Dto;
+using Newtonsoft.Json;
+using System.Net.Http;
+using WatchReadShare.Application;
 
 namespace WatchReadShare.FrontEnd.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly HttpClient _httpClient;
-        private readonly IConfiguration _configuration;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public HomeController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public HomeController(IHttpClientFactory httpClientFactory)
         {
-            var handler = new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback = (message, cert, chain, SslPolicyErrors) => true
-            };
-            _httpClient = new HttpClient(handler);
-            _configuration = configuration;
+
+            _httpClientFactory = httpClientFactory;
+
         }
 
         public async Task<IActionResult> Index()
         {
             try
             {
-                var apiBaseUrl = _configuration["ApiSettings:BaseUrl"];
-                var response = await _httpClient.GetAsync($"{apiBaseUrl}/Movies");
+
+                var client = _httpClientFactory.CreateClient();
+                var response = await client.GetAsync("https://localhost:7113/api/Movies");
                 
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var movies = JsonSerializer.Deserialize<List<MovieDto>>(content, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
+                    var movies = JsonConvert.DeserializeObject<ServiceResult<List<MovieDto>>>(content);
 
-                    var movieViewModels = movies?.Select(m => new MovieCardViewModel
+                    var movieViewModels = movies?.Data.Select(m => new MovieCardViewModel
                     {
                         Id = m.Id,
                         Name = m.Name ?? string.Empty,

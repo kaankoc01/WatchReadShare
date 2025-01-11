@@ -15,8 +15,7 @@ namespace WatchReadShare.Application.Features.Movies
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name.ToLowerInvariant()));
             CreateMap<UpdateMovieRequest, Movie>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name.ToLowerInvariant()));
-            //CreateMap<Movie, MovieDto>()
-            //    .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre.Name));
+           
 
         }
     }
