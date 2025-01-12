@@ -11,6 +11,8 @@ namespace WatchReadShare.Application.Features.Movies
         public MovieMappingProfile()
         {
             CreateMap<Movie, MovieDto>().ReverseMap();
+            // MovieDto -> MovieDetailViewModel
+            //CreateMap<MovieDto, MovieDetailViewModel>();
             CreateMap<CreateMovieRequest, Movie>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name.ToLowerInvariant()));
             CreateMap<UpdateMovieRequest, Movie>()

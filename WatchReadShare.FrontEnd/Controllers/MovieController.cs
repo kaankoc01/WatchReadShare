@@ -4,6 +4,9 @@ using System.Text.Json;
 using System.Text;
 using WatchReadShare.FrontEnd.Models;
 using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
+using WatchReadShare.Application;
 
 namespace WatchReadShare.FrontEnd.Controllers
 {
@@ -21,6 +24,7 @@ namespace WatchReadShare.FrontEnd.Controllers
             _httpClient = new HttpClient(handler);
             _configuration = configuration;
         }
+        // incelenecek
         [HttpGet]
         public async Task<IActionResult> Detail(int id)
         {
@@ -29,20 +33,19 @@ namespace WatchReadShare.FrontEnd.Controllers
                 var token = HttpContext.Session.GetString("AccessToken");
                 if (!string.IsNullOrEmpty(token))
                 {
-                    _httpClient.DefaultRequestHeaders.Authorization = 
+                    _httpClient.DefaultRequestHeaders.Authorization =
                         new AuthenticationHeaderValue("Bearer", token);
                 }
 
                 var apiBaseUrl = _configuration["ApiSettings:BaseUrl"];
                 var response = await _httpClient.GetAsync($"{apiBaseUrl}/Movies/{id}");
-                
+
+   
+
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var movie = JsonSerializer.Deserialize<MovieDetailViewModel>(content, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
+                    var movie = JsonConvert.DeserializeObject<ServiceResult<MovieDetailViewModel>>(content);  //sanırım burada sorun 
 
                     return View(movie);
                 }
@@ -55,9 +58,9 @@ namespace WatchReadShare.FrontEnd.Controllers
                 return View("Error");
             }
         }
-
+        // incelenecek
         [HttpPost]
-        [Authorize]
+       // [Authorize]
         public async Task<IActionResult> AddComment(AddCommentViewModel model)
         {
             try
@@ -65,17 +68,17 @@ namespace WatchReadShare.FrontEnd.Controllers
                 var token = HttpContext.Session.GetString("AccessToken");
                 if (string.IsNullOrEmpty(token))
                 {
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("Index", "Login");
                 }
 
-                _httpClient.DefaultRequestHeaders.Authorization = 
+                _httpClient.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
 
                 var commentRequest = new
                 {
                     MovieId = model.MovieId,
                     Content = model.Content
-                    
+
                 };
 
                 var json = JsonSerializer.Serialize(commentRequest);
@@ -101,7 +104,7 @@ namespace WatchReadShare.FrontEnd.Controllers
 
             return RedirectToAction(nameof(Detail), new { id = model.MovieId });
         }
-
+        // like back-endde daha yok.
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> LikeComment(int commentId)
@@ -114,7 +117,7 @@ namespace WatchReadShare.FrontEnd.Controllers
                     return Unauthorized();
                 }
 
-                _httpClient.DefaultRequestHeaders.Authorization = 
+                _httpClient.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
 
                 var apiBaseUrl = _configuration["ApiSettings:BaseUrl"];
@@ -128,10 +131,4 @@ namespace WatchReadShare.FrontEnd.Controllers
         }
     }
 
-    public class AddCommentRequest
-    {
-        public int MovieId { get; set; }
-        public string Text { get; set; }
-        public int Rating { get; set; }
-    }
-} 
+}

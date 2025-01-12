@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using WatchReadShare.Application;
 using WatchReadShare.FrontEnd.Models;
 
 namespace WatchReadShare.FrontEnd.Controllers
@@ -7,25 +8,28 @@ namespace WatchReadShare.FrontEnd.Controllers
     // [Authorize(AuthenticationSchemes = "Cookies")]
     public class MyProfileController : Controller
     {
-        private readonly HttpClient _httpClient;
-        private const string ApiBaseUrl = "https://localhost:7113/api";
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public MyProfileController(HttpClient httpClient)
+        public MyProfileController(IHttpClientFactory httpClientFactory)
         {
-            _httpClient = httpClient;
+            _httpClientFactory = httpClientFactory;
         }
-
+        // incelenecek.***
         public async Task<IActionResult> Index()
         {
+
             try
             {
                 AddBearerToken();
-                var response = await _httpClient.GetAsync($"{ApiBaseUrl}/User/GetProfile");
+                var client = _httpClientFactory.CreateClient();
+                var response = await client.GetAsync("https://localhost:7113/api/Auth/confirm-email"); // böyle bir api ucu yok User/GetProfile 
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var profile = await response.Content.ReadFromJsonAsync<MyProfileViewModel>();
-                    return View(profile);
+                    var profile = await response.Content.ReadAsStringAsync();
+                    var movies = JsonConvert.DeserializeObject<ServiceResult<List<MyProfileViewModel>>>(profile);
+
+                    return View(movies);
                 }
 
                 return View(new MyProfileViewModel()); // Boş model ile view'ı göster
@@ -38,12 +42,15 @@ namespace WatchReadShare.FrontEnd.Controllers
 
         private void AddBearerToken()
         {
-            var token = HttpContext.Session.GetString("JWTToken");
+            var token = HttpContext.Session.GetString("AccessToken");
             if (!string.IsNullOrEmpty(token))
             {
-                _httpClient.DefaultRequestHeaders.Authorization = 
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization =
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             }
         }
+
+
     }
 }

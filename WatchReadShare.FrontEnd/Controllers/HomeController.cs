@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using WatchReadShare.FrontEnd.Models;
-using System.Net.Security;
-using WatchReadShare.Application.Features.Movies.Dto;
 using Newtonsoft.Json;
-using System.Net.Http;
 using WatchReadShare.Application;
+using WatchReadShare.Application.Features.Movies.Dto;
+using WatchReadShare.FrontEnd.Models;
 
 namespace WatchReadShare.FrontEnd.Controllers
 {

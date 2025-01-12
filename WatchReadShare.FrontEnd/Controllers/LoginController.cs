@@ -35,7 +35,7 @@ namespace WatchReadShare.FrontEnd.Controllers
                 var token = JsonConvert.DeserializeObject<TokenResponse>(tokenResponse);
 
                 // Session kullanarak token'ı saklama
-                // HttpContext.Session.SetString("AccessToken", token.AccessToken);
+                HttpContext.Session.SetString("AccessToken", token.AccessToken);
 
                 // Alternatif: Cookie kullanımı
                 Response.Cookies.Append("AccessToken", token.AccessToken, new CookieOptions

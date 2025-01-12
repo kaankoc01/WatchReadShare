@@ -1,6 +1,6 @@
-@model MovieDetailViewModel
+@model WatchReadShare.Application.ServiceResult<MovieDetailViewModel>
 @{
-    ViewData["Title"] = Model.Name;
+    ViewData["Title"] = Model.Data.Name;
 }
 
 <div class="movie-detail-section">
@@ -8,27 +8,27 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="movie-header">
-                    <h1 class="movie-title">@Model.Name</h1>
+                    <h1 class="movie-title">@Model.Data.Name</h1>
                     <div class="movie-meta">
-                        @if (Model.Year.HasValue)
+                        @if (Model.Data.Year.HasValue)
                         {
-                            <span><i class="fas fa-calendar"></i> @Model.Year</span>
+                            <span><i class="fas fa-calendar"></i> @Model.Data.Year</span>
                         }
                     </div>
                 </div>
 
                 <div class="movie-content">
-                    <img src="@(Model.ImageUrl ?? "/images/default-movie.jpg")" alt="@Model.Name" class="movie-poster">
-                    <p class="movie-description">@Model.Description</p>
+                    <img src="@(Model.Data.ImageUrl ?? "/images/default-movie.jpg")" alt="@Model.Data.Name" class="movie-poster">
+                    <p class="movie-description">@Model.Data.Description</p>
                 </div>
 
                 <!-- Yorum bölümü -->
                 <div class="comments-section">
-                    <h3>Yorumlar (@Model.Comments.Count)</h3>
+                    <h3>Yorumlar (@Model.Data.Comments.Count)</h3>
                     
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <partial name="_AddComment" model="new AddCommentViewModel { MovieId = Model.Id }" />
+                        <partial name="_AddComment" model="new AddCommentViewModel { MovieId = Model.Data.Id }" />
                     }
                     else
                     {
@@ -37,7 +37,7 @@
                         </div>
                     }
 
-                    @foreach (var comment in Model.Comments.OrderByDescending(c => c.Created))
+                    @foreach (var comment in Model.Data.Comments.OrderByDescending(c => c.Created))
                     {
                         <div class="comment-item">
                             <div class="comment-content">
