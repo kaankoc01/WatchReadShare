@@ -1,0 +1,81 @@
+@{
+    ViewData["Title"] = "E-posta Doğrulama";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>E-posta Doğrulama</h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-envelope-open-text fa-4x text-primary mb-3"></i>
+                        <p class="lead">
+                            <strong>@ViewBag.Email</strong> adresine gönderilen doğrulama kodunu giriniz.
+                        </p>
+                    </div>
+
+                    <form method="post" asp-action="ConfirmEmail" asp-controller="Register">
+                        <input type="hidden" name="email" value="@ViewBag.Email" />
+                        
+                        <div class="form-group mb-3">
+                            <label for="code" class="form-label">Doğrulama Kodu</label>
+                            <input type="text" class="form-control form-control-lg text-center" 
+                                   id="code" name="code" required 
+                                   placeholder="Doğrulama kodunu giriniz"
+                                   maxlength="6"
+                                   pattern="\d{6}"
+                                   title="Lütfen 6 haneli doğrulama kodunu giriniz">
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString()))
+                        {
+                            <div class="alert alert-danger">
+                                @TempData["ErrorMessage"]
+                            </div>
+                        }
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-check-circle me-2"></i>Doğrula
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="mb-0">
+                            Doğrulama kodu almadınız mı?
+                            <a href="#" id="resendCode" class="text-decoration-none">Tekrar Gönder</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Sadece sayı girişine izin ver
+            $('#code').on('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+
+            // Tekrar gönderme işlemi
+            $('#resendCode').click(function(e) {
+                e.preventDefault();
+                
+                $.post('/Register/ResendCode', { email: '@ViewBag.Email' })
+                    .done(function() {
+                        alert('Doğrulama kodu tekrar gönderildi.');
+                    })
+                    .fail(function() {
+                        alert('Doğrulama kodu gönderilirken bir hata oluştu.');
+                    });
+            });
+        });
+    </script>
+} 

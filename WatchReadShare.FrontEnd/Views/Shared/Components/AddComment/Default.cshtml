@@ -1,0 +1,58 @@
+@model AddCommentViewModel
+
+<div class="comment-form mb-4">
+    <h4>Yorum Yap</h4>
+    <form id="addCommentForm">
+        <input type="hidden" id="movieId" value="@Model.MovieId" />
+        <div class="mb-3">
+            <label for="commentContent" class="form-label">Yorumunuz</label>
+            <textarea class="form-control" id="commentContent" rows="3" required 
+                placeholder="Film hakkında düşüncelerinizi paylaşın..."></textarea>
+            <div class="invalid-feedback">
+                Lütfen bir yorum yazın.
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane me-2"></i>Yorumu Gönder
+        </button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#addCommentForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                var commentData = {
+                    content: $('#commentContent').val(),
+                    movieId: parseInt($('#movieId').val())
+                };
+                
+                $.ajax({
+                    url: '/Comments/Create',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(commentData),
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success('Yorumunuz başarıyla eklendi!');
+                            $('#commentContent').val('');
+                            location.reload();
+                        } else {
+                            toastr.error('Yorum eklenirken bir hata oluştu: ' + response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 401) {
+                            toastr.warning('Yorum yapabilmek için giriş yapmalısınız.');
+                            window.location.href = '/login';
+                        } else {
+                            toastr.error('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+} 

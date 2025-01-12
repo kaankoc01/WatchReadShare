@@ -4,8 +4,6 @@ using System.Text.Json;
 using System.Text;
 using WatchReadShare.FrontEnd.Models;
 using System.Net.Http.Headers;
-using Newtonsoft.Json;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 using WatchReadShare.Application;
 
 namespace WatchReadShare.FrontEnd.Controllers
@@ -14,8 +12,9 @@ namespace WatchReadShare.FrontEnd.Controllers
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<MovieController> _logger;
 
-        public MovieController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public MovieController(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<MovieController> logger)
         {
             var handler = new HttpClientHandler
             {
@@ -23,14 +22,17 @@ namespace WatchReadShare.FrontEnd.Controllers
             };
             _httpClient = new HttpClient(handler);
             _configuration = configuration;
+            _logger = logger;
         }
-        // incelenecek
+
         [HttpGet]
         public async Task<IActionResult> Detail(int id)
         {
             try
             {
                 var token = HttpContext.Session.GetString("AccessToken");
+                _logger.LogInformation($"Token: {token}");
+
                 if (!string.IsNullOrEmpty(token))
                 {
                     _httpClient.DefaultRequestHeaders.Authorization =
@@ -38,36 +40,64 @@ namespace WatchReadShare.FrontEnd.Controllers
                 }
 
                 var apiBaseUrl = _configuration["ApiSettings:BaseUrl"];
-                var response = await _httpClient.GetAsync($"{apiBaseUrl}/Movies/{id}");
+                _logger.LogInformation($"API URL: {apiBaseUrl}/Movies/{id}");
 
-   
+                var response = await _httpClient.GetAsync($"{apiBaseUrl}/Movies/{id}");
 
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var movie = JsonConvert.DeserializeObject<ServiceResult<MovieDetailViewModel>>(content);  //sanırım burada sorun 
+                    _logger.LogInformation($"API Response: {content}");
 
-                    return View(movie);
+                    var result = JsonSerializer.Deserialize<ServiceResult<MovieDetailViewModel>>(content, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (result != null && result.Data != null)
+                    {
+                        // ViewBag'e kullanıcı bilgilerini ekle
+                        ViewBag.UserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                        ViewBag.UserName = User.Identity?.Name;
+                        ViewBag.IsAuthenticated = User.Identity?.IsAuthenticated ?? false;
+
+                        return View(result.Data);
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Film bulunamadı.";
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
 
                 return NotFound();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                _logger.LogError($"Error in Detail action: {ex.Message}");
                 return View("Error");
             }
         }
-        // incelenecek
+
         [HttpPost]
-       // [Authorize]
+        [Authorize]
         public async Task<IActionResult> AddComment(AddCommentViewModel model)
         {
             try
             {
+                _logger.LogInformation($"AddComment called with MovieId: {model.MovieId}, Content: {model.Content}");
+
                 var token = HttpContext.Session.GetString("AccessToken");
                 if (string.IsNullOrEmpty(token))
                 {
+                    _logger.LogWarning("Token not found in session");
+                    return RedirectToAction("Index", "Login");
+                }
+
+                var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                {
+                    _logger.LogWarning("UserId not found in claims");
                     return RedirectToAction("Index", "Login");
                 }
 
@@ -76,16 +106,21 @@ namespace WatchReadShare.FrontEnd.Controllers
 
                 var commentRequest = new
                 {
+                    Content = model.Content,
                     MovieId = model.MovieId,
-                    Content = model.Content
-
+                    UserId = int.Parse(userId)
                 };
 
                 var json = JsonSerializer.Serialize(commentRequest);
+                _logger.LogInformation($"Request JSON: {json}");
+
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var apiBaseUrl = _configuration["ApiSettings:BaseUrl"];
                 var response = await _httpClient.PostAsync($"{apiBaseUrl}/Comments", content);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation($"API Response: {responseContent}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -93,18 +128,19 @@ namespace WatchReadShare.FrontEnd.Controllers
                 }
                 else
                 {
-                    var error = await response.Content.ReadAsStringAsync();
-                    TempData["Error"] = $"Yorum eklenemedi: {error}";
+                    _logger.LogWarning($"API error: {response.StatusCode} - {responseContent}");
+                    TempData["Error"] = $"Yorum eklenemedi: {responseContent}";
                 }
             }
             catch (Exception ex)
             {
+                _logger.LogError($"Error in AddComment: {ex.Message}");
                 TempData["Error"] = "Bir hata oluştu: " + ex.Message;
             }
 
             return RedirectToAction(nameof(Detail), new { id = model.MovieId });
         }
-        // like back-endde daha yok.
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> LikeComment(int commentId)
@@ -124,11 +160,11 @@ namespace WatchReadShare.FrontEnd.Controllers
                 var response = await _httpClient.PostAsync($"{apiBaseUrl}/Comments/{commentId}/like", null);
                 return response.IsSuccessStatusCode ? Ok() : BadRequest();
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError($"Error in LikeComment: {ex.Message}");
                 return StatusCode(500);
             }
         }
     }
-
 }
