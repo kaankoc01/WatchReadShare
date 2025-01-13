@@ -30,7 +30,7 @@ namespace WatchReadShare.FrontEnd.Controllers
         {
             try
             {
-                _logger.LogInformation($"Create comment called with MovieId: {model.MovieId}, Content: {model.Content}");
+                _logger.LogInformation($"Oluşturulan Yorumun Id'si: {model.MovieId}, Content: {model.Content}");
 
                 var token = HttpContext.Session.GetString("AccessToken");
                 if (string.IsNullOrEmpty(token))
